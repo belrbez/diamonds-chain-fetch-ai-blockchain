@@ -42,8 +42,8 @@ class VehicleAgent(OEFAgent):
         {
             "price_per_km": 10,
             "state": "WAIT",
-            "driver_id": None,
-            "passengers_ids": None
+            "driver_id": "",
+            "passengers_ids": [""]
         }
     )
 

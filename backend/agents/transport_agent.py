@@ -18,21 +18,15 @@
 #   limitations under the License.
 #
 # ------------------------------------------------------------------------------
-import pickle
 import json
-import pprint
 import time
 from typing import List
+
 import schedule
-
-from oef.query import Query, Constraint, Eq
-from oef.agents import OEFAgent
-from oef.messages import CFP_TYPES
-from oef.schema import Description, Location
-from fetchai.ledger.api import LedgerApi
-from fetchai.ledger.contract import SmartContract
 from fetchai.ledger.crypto import Entity, Address
-
+from oef.agents import OEFAgent
+from oef.query import Query, Constraint, Eq
+from oef.schema import Description
 from transport_schema import TRANSPORT_DATAMODEL
 from trip_schema import TRIP_DATAMODEL
 

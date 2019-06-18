@@ -1,6 +1,6 @@
 import setuptools
 
-requirements = ['flask', 'pickle', 'oef', 'schedule']
+requirements = ['flask', 'oef', 'schedule']
 
 setuptools.setup(
     name='Backend',

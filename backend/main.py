@@ -5,7 +5,7 @@ from agents.trip_agent import add_agent
 from agents.transport_agent import add_transport_agent
 import asyncio
 from threading import Thread
-from uuid import UUID
+from uuid import uuid4
 from random import uniform
 
 app = flask.Flask(__name__)
@@ -26,7 +26,7 @@ def add_agent_to_oef(data):
 @app.route("/journey", methods=['POST'])
 def add_journey_request():
     data = flask.request.json
-    data['trip_id'] = UUID()
+    data['trip_id'] = uuid4().hex
     data['status'] = 'WAIT'
     Thread(target=add_agent_to_oef, args=data).start()
     trips[data['account_id']] = data
@@ -42,7 +42,7 @@ def get_journey_request(trip_id: str):
 
 def add_transport_agent_to_oef():
     data = {
-        'id': UUID(),
+        'id': uuid4().hex,
         'location': {
             'latitude': uniform(0, 10),
             'longitude': uniform(0, 10),

@@ -33,7 +33,7 @@ from fetchai.ledger.api import LedgerApi
 from fetchai.ledger.contract import SmartContract
 from fetchai.ledger.crypto import Entity, Address
 
-from trip_schema import FROM_LONGITUDE, FROM_LATITUDE
+from trip_schema import FROM_LOCATION
 
 
 class TransportAgent(OEFAgent):
@@ -59,7 +59,7 @@ class TransportAgent(OEFAgent):
 
     def search(self):
         print("[{}]: Transport: Searching for trips...".format(self.public_key))
-        query = Query([Constraint(FROM_LONGITUDE.name, Eq(1)), Constraint(FROM_LATITUDE.name, Eq(1))])
+        query = Query([Constraint(FROM_LOCATION.name, Eq(Location(52.2057092, 0.1183431)))])
         agent.search_services(0, query)
 
     def on_search_result(self, search_id: int, agents: List[str]):

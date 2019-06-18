@@ -1,8 +1,8 @@
 import flask
 import json
 from os import environ
-from trips.trip_agent import add_agent
-from trips.transport_agent import add_transport_agent
+from agents.trip_agent import add_agent
+from agents.transport_agent import add_transport_agent
 import asyncio
 from threading import Thread
 from uuid import UUID

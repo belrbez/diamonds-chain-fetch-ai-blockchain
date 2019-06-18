@@ -2,7 +2,7 @@ import pickle
 import json
 import pprint
 
-from agents.scooter_schema import PRICE_PER_KM, JOURNEY_MODEL
+from agents.trip_schema import PRICE_PER_KM, JOURNEY_MODEL
 from oef.agents import OEFAgent
 
 from typing import List
@@ -14,7 +14,12 @@ import asyncio
 import time
 
 
-class RiderAgent(OEFAgent):
+class TripAgent(OEFAgent):
+
+    def __init__(self, data, *args, **kwargs):
+        super(TripAgent, args, kwargs)
+        self.data = data
+
     def on_search_result(self, search_id: int, agents: List[str]):
         """For every agent returned in the service search, send a CFP to obtain resources from them."""
         if len(agents) == 0:
@@ -44,14 +49,17 @@ class RiderAgent(OEFAgent):
         transaction = json.loads(content.decode("utf-8"))
         print("[{0}]: Received contract from {1}".format(self.public_key, origin))
         print("READY TO SUBMIT: ", transaction)
-
+        self.data['status'] = 'DRIVES'
+        time.sleep(3)
+        self.data['status'] = 'FINISHED'
+        print('Agent {} trip finished'.format(self.data['account_id']))
         self.stop()
 
 
 def add_agent(data):
     # create and connect the agent
     print('Add agent: ' + data['name'])
-    agent = RiderAgent("RiderAgent", oef_addr="185.91.52.11", oef_port=10000)
+    agent = TripAgent(data, data['name'], oef_addr="185.91.52.11", oef_port=10000)
     agent.connect()
 
     time.sleep(2)

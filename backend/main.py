@@ -2,6 +2,7 @@ import flask
 import json
 import os
 from agents.rider_agent import add_agent
+import asyncio
 
 app = flask.Flask(__name__)
 
@@ -13,6 +14,8 @@ def to_json(data):
 @app.route("/journey", methods=['POST'])
 def add_journey_request():
     data = flask.request.json
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
     add_agent(data)
     return 'ok'
 

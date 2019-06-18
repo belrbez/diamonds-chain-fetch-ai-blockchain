@@ -11,6 +11,7 @@ target/
 
 ### IntelliJ IDEA ###
 .idea
+.*/.idea
 *.iws
 *.iml
 *.ipr
@@ -32,3 +33,5 @@ mvnw*
 
 ### python ###
 venv
+.*/venv/*
+.*/__pycache__

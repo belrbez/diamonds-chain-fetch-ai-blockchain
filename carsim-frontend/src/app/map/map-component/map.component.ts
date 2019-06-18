@@ -155,7 +155,9 @@ export class MapComponent implements OnInit {
   }
 
   drive() {
-    this.accountService.drive(this.account, this.pick);
+    this.accountService.drive(this.account, this.pick).subscribe(tripId => {
+      console.log('Created trip ' + tripId);
+    });
   }
 
 }

@@ -23,7 +23,7 @@ def add_agent_to_oef(data):
     add_agent(data)
 
 
-@app.route("/journey", methods=['POST'])
+@app.route("/trips", methods=['POST'])
 def add_journey_request():
     data = flask.request.json
     data['trip_id'] = uuid4().hex
@@ -33,7 +33,7 @@ def add_journey_request():
     return 'ok'
 
 
-@app.route('/journey/<trip_id>', methods=['GET'])
+@app.route('/trips/<trip_id>', methods=['GET'])
 def get_journey_request(trip_id: str):
     if trip_id not in trips:
         flask.abort(404)

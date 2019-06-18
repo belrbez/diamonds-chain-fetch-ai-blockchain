@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Account} from '../model/account';
 import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -31,8 +32,8 @@ export class AccountService {
     return null;
   }
 
-  public drive(account: Account, pick: any) {
-    this.http.post('fuckyou', {
+  public drive(account: Account, pick: any): Observable<string> {
+    return this.http.post<string>('trips', {
       id: account.id,
       name: account.name,
       start: {
@@ -44,6 +45,10 @@ export class AccountService {
         latitude: pick.latitudeTo
       },
       isDriver: account.isDriver
-    });
+    })
+  }
+
+  public tripState(tripId: string) {
+    return this.http.get('trips/' + tripId);
   }
 }

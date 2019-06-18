@@ -102,7 +102,7 @@ class VehicleAgent(OEFAgent):
 
 
 if __name__ == "__main__":
-    agent = VehicleAgent("vehicle", oef_addr="185.91.52.11", oef_port=10001)
+    agent = VehicleAgent("vehcle", oef_addr="185.91.52.11", oef_port=10001)
     agent.connect()
     agent.register_service(77, agent.vehicle_description)
 

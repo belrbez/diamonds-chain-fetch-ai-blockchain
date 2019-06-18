@@ -21,12 +21,32 @@
 
 from oef.schema import DataModel, AttributeSchema
 
+PERSON_ID = AttributeSchema("account_id",
+                            str,
+                            is_attribute_required=True,
+                            attribute_description="Person ID.")
 
-PRICE_PER_KM = AttributeSchema("price_per_km",
-                                  bool,
-                                  is_attribute_required=True,
-                                  attribute_description="Provides the price per kilometer.")
+TRIP_ID = AttributeSchema("trip_id",
+                          str,
+                          is_attribute_required=True,
+                          attribute_description="Person ID.")
 
-JOURNEY_MODEL = DataModel("journey",
-                               [PRICE_PER_KM],
-                               "All possible scooter data.")
+FROM_LONGITUDE = AttributeSchema("from_longitude",
+                                 int,
+                                 is_attribute_required=True,
+                                 attribute_description="Longitude of FROM point.")
+
+FROM_LATITUDE = AttributeSchema("from_latitude",
+                                int,
+                                is_attribute_required=True,
+                                attribute_description="Latitude of FROM point.")
+
+TO_LONGITUDE = AttributeSchema("to_longitude",
+                               int,
+                               is_attribute_required=True,
+                               attribute_description="Longitude of TO point.")
+
+TO_LATITUDE = AttributeSchema("to_latitude",
+                              int,
+                              is_attribute_required=True,
+                              attribute_description="Latitude of TO point.")

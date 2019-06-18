@@ -1,7 +1,7 @@
 import flask
 import json
 import os
-from backend.agents.rider_agent import add_agent
+from agents.rider_agent import add_agent
 
 app = flask.Flask(__name__)
 

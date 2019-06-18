@@ -1,0 +1,18 @@
+POST localhost:8001/journey
+Content-Type: application/json
+
+{
+  "id": "kek",
+  "name": "agent1",
+  "start": {
+    "latitude": 12.5,
+    "longitude": 20.1
+  },
+  "end": {
+    "latitude": 12.6,
+    "longitude": 18.1
+  },
+  "isDriver": true
+}
+
+###

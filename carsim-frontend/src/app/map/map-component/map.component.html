@@ -1,0 +1,39 @@
+<mat-toolbar color="primary">
+
+  <mat-toolbar-row>
+    <span>Car Sim</span>
+    <span class="example-spacer"></span>
+    <span>{{ account?.name }}</span>
+    <mat-icon class="example-icon" aria-hidden="false" aria-label="Example user verified icon">verified_user</mat-icon>
+  </mat-toolbar-row>
+
+</mat-toolbar>
+
+<div>
+  <label class="label">From: </label>
+
+  <mat-form-field class="example-full-width">
+    <input matInput disabled="true" type="number" value="{{pick.latitudeFrom}}" placeholder="Latitude">
+  </mat-form-field>
+
+  <mat-form-field class="example-full-width">
+    <input matInput disabled="true" type="number" value="{{pick.longitudeFrom}}" placeholder="Longitude">
+  </mat-form-field>
+  <button mat-raised-button (click)="pickFrom()" color="primary">{{pick.pickValFrom ? 'Cancel' : 'Pick' }}</button>
+</div>
+<div>
+  <label class="label">To: </label>
+
+  <mat-form-field class="example-full-width">
+    <input matInput disabled="true" type="number" value="{{pick.latitudeTo}}" placeholder="Latitude">
+  </mat-form-field>
+
+  <mat-form-field class="example-full-width">
+    <input matInput disabled="true" type="number" value="{{pick.longitudeTo}}" placeholder="Longitude">
+  </mat-form-field>
+  <button mat-raised-button (click)="pickTo()" color="primary">{{pick.pickValTo ? 'Cancel' : 'Pick' }}</button>
+</div>
+<button mat-raised-button (click)="drive()" [disabled]="!pick.latitudeFrom || !pick.latitudeTo" color="primary">Drive</button>
+<br>
+<div id="map" class="map"></div>
+<div id="mouse-position"></div>

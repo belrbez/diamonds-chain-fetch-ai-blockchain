@@ -32,7 +32,7 @@ from fetchai.ledger.api import LedgerApi
 from fetchai.ledger.contract import SmartContract
 from fetchai.ledger.crypto import Entity, Address
 
-from fetch.trip_schema import FROM_LONGITUDE, FROM_LATITUDE
+from trip_schema import FROM_LONGITUDE, FROM_LATITUDE
 
 
 class VehicleAgent(OEFAgent):

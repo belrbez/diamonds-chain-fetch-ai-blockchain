@@ -1,18 +1,14 @@
-import pickle
 import json
-import pprint
-
-from agents.oldtrip_schemaold import PRICE_PER_KM, JOURNEY_MODEL
-from oef.agents import OEFAgent
-
+import time
+from random import randint
 from typing import List
+
+from oef.agents import OEFAgent
 from oef.proxy import PROPOSE_TYPES
 from oef.query import Eq, Constraint
 from oef.query import Query
-from random import randint
 
-import asyncio
-import time
+from agents.oldtrip_schemaold import PRICE_PER_KM, JOURNEY_MODEL
 
 
 class TripAgent(OEFAgent):

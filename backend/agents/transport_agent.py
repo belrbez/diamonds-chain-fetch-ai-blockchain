@@ -25,8 +25,9 @@ from typing import List
 import schedule
 from fetchai.ledger.crypto import Entity, Address
 from oef.agents import OEFAgent
-from oef.query import Query, Constraint, Eq
+from oef.query import Query, Constraint, Eq, Distance
 from oef.schema import Description
+
 from transport_schema import TRANSPORT_DATAMODEL
 from trip_schema import TRIP_DATAMODEL
 
@@ -50,8 +51,17 @@ class TransportAgent(OEFAgent):
         self.transport_description = Description(self.data, TRANSPORT_DATAMODEL())
 
     def search_drivers(self):
-        print("[{}]: Transport: Searching for trips...".format(self.public_key))
-        query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Eq(self.data['position']))])
+        print("[{}]: Transport: Searching for Passenger trips...".format(self.public_key))
+        # TODO: use TRIP_DATAMODEL.DISTANCE_AREA to compare
+        query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['position'], 20.0)),
+                       Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['position'], 30.0)),
+                       Constraint(TRIP_DATAMODEL.CAN_BE_DRIVER.name, Eq(True))])
+        agent.search_services(0, query)
+
+    def search_passengers(self):
+        print("[{}]: Transport: Searching for Passenger and Drivers trips...".format(self.public_key))
+        query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['position'], 20.0)),
+                       Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['position'], 30.0))])
         agent.search_services(0, query)
 
     def on_search_result(self, search_id: int, agents: List[str]):
@@ -75,7 +85,10 @@ class TransportAgent(OEFAgent):
 
         # TRIP IN PROGRESS
         print("[{0}]: Transport: Trip in progress.".format(self.public_key))
+        self.data['state'] = 'DRIVE'
+        schedule.every(10).seconds.do(agent.search_passangers)
         time.sleep(5)
+        self.data['state'] = 'WAIT'
         print("[{0}]: Transport: Trip finished.".format(self.public_key))
 
         # Preparing contract

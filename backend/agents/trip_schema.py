@@ -28,6 +28,11 @@ class TRIP_DATAMODEL(DataModel):
                                 is_attribute_required=True,
                                 attribute_description="Person ID.")
 
+    CAN_BE_DRIVER = AttributeSchema("can_be_driver",
+                                bool,
+                                is_attribute_required=True,
+                                attribute_description="Can person be driver?")
+
     TRIP_ID = AttributeSchema("trip_id",
                               str,
                               is_attribute_required=True,
@@ -43,9 +48,16 @@ class TRIP_DATAMODEL(DataModel):
                                   is_attribute_required=True,
                                   attribute_description="Longitude of TO point.")
 
+    DISTANCE_AREA = AttributeSchema("distance_area",
+                                  int,
+                                  is_attribute_required=False,
+                                  attribute_description="Allowed distance of area from center of way-point.")
+
     def __init__(self):
         super().__init__("trip_datamodel", [self.PERSON_ID,
+                                            self.CAN_BE_DRIVER,
                                             self.TRIP_ID,
                                             self.FROM_LOCATION,
-                                            self.TO_LOCATION],
+                                            self.TO_LOCATION,
+                                            self.DISTANCE_AREA],
                          "Trip create fully.")

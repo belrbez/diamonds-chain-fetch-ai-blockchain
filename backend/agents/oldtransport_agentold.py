@@ -1,16 +1,14 @@
-import pickle
 import json
-import pprint
-
 from random import randint
 
-from agents.oldtrip_schemaold import JOURNEY_MODEL
-from oef.agents import OEFAgent
-from oef.messages import CFP_TYPES
-from oef.schema import Description
 from fetchai.ledger.api import LedgerApi
 from fetchai.ledger.contract import SmartContract
 from fetchai.ledger.crypto import Entity, Address
+from oef.agents import OEFAgent
+from oef.messages import CFP_TYPES
+from oef.schema import Description
+
+from agents.oldtrip_schemaold import JOURNEY_MODEL
 
 
 class TransportAgent(OEFAgent):

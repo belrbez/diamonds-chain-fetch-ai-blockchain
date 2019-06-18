@@ -18,24 +18,14 @@
 #   limitations under the License.
 #
 # ------------------------------------------------------------------------------
-import pickle
 import json
-import pprint
 from email._header_value_parser import Address
 from xml.dom.minidom import Entity
 
 from oef.agents import OEFAgent
-
-from typing import List
-
 from oef.messages import CFP_TYPES
 from oef.proxy import PROPOSE_TYPES
-from oef.query import Eq, Constraint
-from oef.query import Query
-from oef.schema import Description, Location
-
-import asyncio
-import time
+from oef.schema import Description
 
 from trip_schema import TRIP_DATAMODEL
 
@@ -49,9 +39,11 @@ class TripAgent(OEFAgent):
 
         self.data = {
             "account_id": data['account_id'],
+            "can_be_driver": data['can_be_driver'],
             "trip_id": data['trip_id'],
             "from_location": data['from_location'],
-            "to_location": data['to_location']
+            "to_location": data['to_location'],
+            "distance_area": data['distance_area']
         }
         self.trip_description = Description(self.data, TRIP_DATAMODEL())
         self.possible_trips = []

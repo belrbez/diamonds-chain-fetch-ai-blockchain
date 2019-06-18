@@ -17,7 +17,6 @@
 #   limitations under the License.
 #
 # ------------------------------------------------------------------------------
-from typing import List
 
 from oef.schema import DataModel, AttributeSchema, Location
 

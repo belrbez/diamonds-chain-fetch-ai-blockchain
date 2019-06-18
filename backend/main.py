@@ -1,12 +1,14 @@
-import flask
+import asyncio
 import json
 from os import environ
-from agents.oldtrip_agentold import add_agent
-from agents.oldtransport_agentold import add_transport_agent
-import asyncio
+from random import uniform
 from threading import Thread
 from uuid import uuid4
-from random import uniform
+
+import flask
+
+from agents.oldtransport_agentold import add_transport_agent
+from agents.oldtrip_agentold import add_agent
 
 app = flask.Flask(__name__)
 

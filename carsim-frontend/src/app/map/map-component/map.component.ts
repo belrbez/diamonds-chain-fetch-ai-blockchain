@@ -3,6 +3,7 @@ import {Subscription} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {AccountService} from '../../service/account.service';
 import {Account} from '../../model/account';
+import {HttpClient} from '@angular/common/http';
 
 declare var ol: any;
 
@@ -35,7 +36,8 @@ export class MapComponent implements OnInit {
   map: any;
 
   constructor(private activatedRouter: ActivatedRoute,
-              private accountService: AccountService) {
+              private accountService: AccountService,
+              private http: HttpClient) {
   }
 
   ngOnInit() {
@@ -155,7 +157,19 @@ export class MapComponent implements OnInit {
   }
 
   drive() {
-
+    this.http.post('fuckyou', {
+      id: this.account.id,
+      name: this.account.name,
+      start: {
+        logitude: this.pick.longitudeFrom,
+        latitude: this.pick.latitudeFrom
+      },
+      end: {
+        logitude: this.pick.longitudeTo,
+        latitude: this.pick.latitudeTo
+      },
+      isDriver: this.account.isDriver
+    });
   }
 
 }

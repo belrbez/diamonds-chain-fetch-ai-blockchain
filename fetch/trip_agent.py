@@ -42,8 +42,8 @@ class TripAgent(OEFAgent):
             "trip_id": "1",
             "from_longitude": 1,
             "from_latitude": 1,
-            "to_longitude": "",
-            "to_latitude": ""
+            "to_longitude": 2,
+            "to_latitude": 2
         }
     )
 

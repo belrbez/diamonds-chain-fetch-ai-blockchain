@@ -22,19 +22,21 @@ from typing import List
 from oef.schema import DataModel, AttributeSchema
 
 PRICE_PER_KM = AttributeSchema("price_per_km",
-                                  int,
-                                  is_attribute_required=True,
-                                  attribute_description="Provides the price per kilometer.")
+                               int,
+                               is_attribute_required=True,
+                               attribute_description="Provides the price per kilometer.")
 
 STATE = AttributeSchema("state",
-                                  str,
-                                  is_attribute_required=True,
-                                  attribute_description="Current state of vehicle.")
+                        str,
+                        is_attribute_required=True,
+                        attribute_description="Current state of vehicle.")
 
-DRIVER_ID = DataModel("driver_id",
-                               str,
-                               "Driver.")
+DRIVER_ID = AttributeSchema("driver_id",
+                            str,
+                            is_attribute_required=False,
+                            attribute_description="Driver.")
 
-PASSENGERS = DataModel("passengers_ids",
-                               List[str],
-                               "All passangers.")
+PASSENGERS = AttributeSchema("passengers_ids",
+                             List[str],
+                             is_attribute_required=False,
+                             attribute_description="All passangers.")

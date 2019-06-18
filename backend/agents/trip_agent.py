@@ -1,33 +1,15 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-# ------------------------------------------------------------------------------
-#
-#   Copyright 2018 Fetch.AI Limited
-#
-#   Licensed under the Apache License, Version 2.0 (the "License");
-#   you may not use this file except in compliance with the License.
-#   You may obtain a copy of the License at
-#
-#       http://www.apache.org/licenses/LICENSE-2.0
-#
-#   Unless required by applicable law or agreed to in writing, software
-#   distributed under the License is distributed on an "AS IS" BASIS,
-#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#   See the License for the specific language governing permissions and
-#   limitations under the License.
-#
-# ------------------------------------------------------------------------------
 import json
 from email._header_value_parser import Address
-from xml.dom.minidom import Entity
+from fetchai.ledger.crypto import Entity, Address
 
+from random import randint
 from oef.agents import OEFAgent
 from oef.messages import CFP_TYPES
 from oef.proxy import PROPOSE_TYPES
 from oef.schema import Description
 
-from trip_schema import TRIP_DATAMODEL
+import time
+from agents.trip_schema import TRIP_DATAMODEL
 
 
 class TripAgent(OEFAgent):
@@ -71,12 +53,14 @@ class TripAgent(OEFAgent):
         self.stop()
 
 
-
-if __name__ == "__main__":
+def add_trip_agent(data):
     # create and connect the agent
-    agent = TripAgent("TripAgent", oef_addr="185.91.52.11", oef_port=10000)
+    print('Add agent: ' + data['name'])
+    pub_key = str(randint(1, 1e9)).replace('0', 'A').replace('1', 'B')
+    agent = TripAgent(data, pub_key, oef_addr="185.91.52.11", oef_port=10000)
     agent.connect()
-    agent.register_service(77, agent.trip_description)
+    msg_id = randint(1, 1e9)
+    agent.register_service(msg_id, agent.trip_description)
 
     try:
         print("[{0}]: Trip: request for a trip sent.".format(agent.public_key))

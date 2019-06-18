@@ -1,35 +1,15 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-# ------------------------------------------------------------------------------
-#
-#   Copyright 2018 Fetch.AI Limited
-#
-#   Licensed under the Apache License, Version 2.0 (the "License");
-#   you may not use this file except in compliance with the License.
-#   You may obtain a copy of the License at
-#
-#       http://www.apache.org/licenses/LICENSE-2.0
-#
-#   Unless required by applicable law or agreed to in writing, software
-#   distributed under the License is distributed on an "AS IS" BASIS,
-#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#   See the License for the specific language governing permissions and
-#   limitations under the License.
-#
-# ------------------------------------------------------------------------------
 import json
 import time
 from typing import List
-
+from random import randint
 import schedule
 from fetchai.ledger.crypto import Entity, Address
 from oef.agents import OEFAgent
 from oef.query import Query, Constraint, Eq, Distance
 from oef.schema import Description
 
-from transport_schema import TRANSPORT_DATAMODEL
-from trip_schema import TRIP_DATAMODEL
+from agents.transport_schema import TRANSPORT_DATAMODEL
+from agents.trip_schema import TRIP_DATAMODEL
 
 
 class TransportAgent(OEFAgent):
@@ -56,13 +36,13 @@ class TransportAgent(OEFAgent):
         query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['position'], 20.0)),
                        Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['position'], 30.0)),
                        Constraint(TRIP_DATAMODEL.CAN_BE_DRIVER.name, Eq(True))])
-        agent.search_services(0, query)
+        self.search_services(0, query)
 
     def search_passengers(self):
         print("[{}]: Transport: Searching for Passenger and Drivers trips...".format(self.public_key))
         query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['position'], 20.0)),
                        Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['position'], 30.0))])
-        agent.search_services(0, query)
+        self.search_services(0, query)
 
     def on_search_result(self, search_id: int, agents: List[str]):
         """For every agent returned in the service search, send a CFP to obtain resources from them."""
@@ -86,7 +66,7 @@ class TransportAgent(OEFAgent):
         # TRIP IN PROGRESS
         print("[{0}]: Transport: Trip in progress.".format(self.public_key))
         self.data['state'] = 'DRIVE'
-        schedule.every(10).seconds.do(agent.search_passangers)
+        schedule.every(10).seconds.do(self.search_passangers)
         time.sleep(5)
         self.data['state'] = 'WAIT'
         print("[{0}]: Transport: Trip finished.".format(self.public_key))
@@ -102,14 +82,15 @@ class TransportAgent(OEFAgent):
         self.send_message(0, dialogue_id, origin, encoded_data)
 
 
-if __name__ == "__main__":
-    agent = TransportAgent("transprt", oef_addr="185.91.52.11", oef_port=10000)
+def add_transport_agent(data):
+    pub_key = str(randint(1, 1e9)).replace('0', 'A').replace('1', 'B')
+    agent = TransportAgent(data, pub_key, oef_addr="185.91.52.11", oef_port=10000)
     agent.connect()
-    agent.register_service(77, agent.transport_description)
+    agent.register_service(randint(1, 1e9), agent.transport_description)
 
     schedule.every(10).seconds.do(agent.search_drivers)
-
     print("[{}]: Transport: Launching new transport agent...".format(agent.public_key))
+
     try:
         agent.run()
     finally:

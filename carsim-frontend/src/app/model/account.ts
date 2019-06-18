@@ -5,5 +5,5 @@ export class Account {
   name: string;
   start?: Coordinate;
   end?: Coordinate;
-  isDriver: boolean;
+  canBeDriver: boolean;
 }

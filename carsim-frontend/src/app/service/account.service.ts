@@ -37,14 +37,14 @@ export class AccountService {
       id: account.id,
       name: account.name,
       start: {
-        logitude: pick.longitudeFrom,
+        longitude: pick.longitudeFrom,
         latitude: pick.latitudeFrom
       },
       end: {
-        logitude: pick.longitudeTo,
+        longitude: pick.longitudeTo,
         latitude: pick.latitudeTo
       },
-      isDriver: account.isDriver
+      canBeDriver: account.canBeDriver
     })
   }
 

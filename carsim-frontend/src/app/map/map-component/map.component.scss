@@ -15,5 +15,36 @@
 
 .label {
   min-width: 80px;
-  display: inline-block;
 }
+
+.all-container {
+  display: flex;
+  flex-direction: row;
+
+  .map-container {
+    flex: 1;
+    height: 840px;
+  }
+
+  .from-to-container {
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+
+    .from-to-header {
+      display: flex;
+      flex-direction: row;
+
+      .label {
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+}
+
+.drive-button {
+  margin: 5px;
+}
+
+

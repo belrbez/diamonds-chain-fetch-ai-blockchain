@@ -4,7 +4,7 @@ import pprint
 
 from random import randint
 
-from agents.trip_schemaold import JOURNEY_MODEL
+from agents.oldtrip_schemaold import JOURNEY_MODEL
 from oef.agents import OEFAgent
 from oef.messages import CFP_TYPES
 from oef.schema import Description

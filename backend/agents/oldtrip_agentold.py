@@ -2,7 +2,7 @@ import pickle
 import json
 import pprint
 
-from agents.trip_schemaold import PRICE_PER_KM, JOURNEY_MODEL
+from agents.oldtrip_schemaold import PRICE_PER_KM, JOURNEY_MODEL
 from oef.agents import OEFAgent
 
 from typing import List

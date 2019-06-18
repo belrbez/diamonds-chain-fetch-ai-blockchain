@@ -21,22 +21,31 @@
 
 from oef.schema import DataModel, AttributeSchema, Location
 
-PERSON_ID = AttributeSchema("account_id",
-                            str,
-                            is_attribute_required=True,
-                            attribute_description="Person ID.")
 
-TRIP_ID = AttributeSchema("trip_id",
-                          str,
-                          is_attribute_required=True,
-                          attribute_description="Person ID.")
+class TRIP_DATAMODEL(DataModel):
+    PERSON_ID = AttributeSchema("account_id",
+                                str,
+                                is_attribute_required=True,
+                                attribute_description="Person ID.")
 
-FROM_LOCATION = AttributeSchema("from_location",
-                                 Location,
-                                 is_attribute_required=True,
-                                 attribute_description="Longitude of FROM point.")
+    TRIP_ID = AttributeSchema("trip_id",
+                              str,
+                              is_attribute_required=True,
+                              attribute_description="Person ID.")
 
-TO_LOCATION = AttributeSchema("to_location",
-                               Location,
-                               is_attribute_required=True,
-                               attribute_description="Longitude of TO point.")
+    FROM_LOCATION = AttributeSchema("from_location",
+                                    Location,
+                                    is_attribute_required=True,
+                                    attribute_description="Longitude of FROM point.")
+
+    TO_LOCATION = AttributeSchema("to_location",
+                                  Location,
+                                  is_attribute_required=True,
+                                  attribute_description="Longitude of TO point.")
+
+    def __init__(self):
+        super().__init__("trip_datamodel", [self.PERSON_ID,
+                                            self.TRIP_ID,
+                                            self.FROM_LOCATION,
+                                            self.TO_LOCATION],
+                         "Trip create fully.")

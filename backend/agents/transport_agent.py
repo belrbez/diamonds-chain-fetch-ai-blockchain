@@ -33,33 +33,31 @@ from fetchai.ledger.api import LedgerApi
 from fetchai.ledger.contract import SmartContract
 from fetchai.ledger.crypto import Entity, Address
 
-from trip_schema import FROM_LOCATION
+from transport_schema import TRANSPORT_DATAMODEL
+from trip_schema import TRIP_DATAMODEL
 
 
 class TransportAgent(OEFAgent):
     """Class that implements the behaviour of the transport agent."""
 
-    transport_description = Description(
-        {
-            "price_per_km": 10,
-            "state": "WAIT",
-            "driver_id": "",
-            "passengers_ids": "",
-            "position": Location(52.2057092, 0.1183431)
-        }
-    )
-
-    def __init__(self, *args, **kwargs):
+    def __init__(self, data, *args, **kwargs):
         super(TransportAgent, self).__init__(*args, **kwargs)
 
         self._entity = Entity()
         self._address = Address(self._entity)
 
-        # schedule.every(10).minutes.do(search)
+        self.data_model = {
+            'price_per_km': data['price_per_km'],
+            'state': "WAIT",
+            'driver_id': None,
+            'passengers_ids': None,
+            'position': data['position']
+        }
+        self.transport_description = Description(self.data_model, TRANSPORT_DATAMODEL())
 
-    def search(self):
+    def search_drivers(self):
         print("[{}]: Transport: Searching for trips...".format(self.public_key))
-        query = Query([Constraint(FROM_LOCATION.name, Eq(Location(52.2057092, 0.1183431)))])
+        query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Eq(self.data_model['position']))])
         agent.search_services(0, query)
 
     def on_search_result(self, search_id: int, agents: List[str]):
@@ -72,14 +70,10 @@ class TransportAgent(OEFAgent):
         print("[{0}]: Transport: Trips found: {1}".format(self.public_key, agents))
         for agent in agents:
             print("[{0}]: Transport: Sending cfp to trip {1}".format(self.public_key, agent))
-
-            price = 1
-
             # prepare the proposal with a given price.
-            proposal = Description({"price_per_km": price})
-            print("[{}]: Transport: Sending propose with price: {}".format(self.public_key, price))
+            proposal = Description({"price_per_km": self.data_model['price_per_km']})
+            print("[{}]: Transport: Sending propose with price: {}".format(self.public_key, self.data_model['price_per_km']))
             self.send_propose(1, 0, agent, 0, [proposal])
-
 
     def on_accept(self, msg_id: int, dialogue_id: int, origin: str, target: int):
         """Once we received an Accept, send the requested data."""
@@ -105,6 +99,8 @@ if __name__ == "__main__":
     agent = TransportAgent("transprt", oef_addr="185.91.52.11", oef_port=10000)
     agent.connect()
     agent.register_service(77, agent.transport_description)
+
+    schedule.every(10).minutes.do(agent.search_drivers)
 
     print("[{}]: Transport: Launching new transport agent...".format(agent.public_key))
     try:

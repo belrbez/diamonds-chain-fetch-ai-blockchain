@@ -44,6 +44,7 @@ class TripAgent(OEFAgent):
             "to_location": Location(52.2057092, 0.1183431)
         }
     )
+    possible_trips = []
 
     def on_cfp(self, msg_id: int, dialogue_id: int, origin: str, target: int, query: CFP_TYPES):
         """Send a simple Propose to the sender of the CFP."""
@@ -53,6 +54,7 @@ class TripAgent(OEFAgent):
         print("[{0}]: Trip: Received propose from agent {1}".format(self.public_key, origin))
         for i, p in enumerate(proposals):
             print("[{0}]: Trip: Proposal {1}: {2}".format(self.public_key, i, p.values))
+            # if p.values["price_per_km"] <
         print("[{0}]: Trip: Accepting Propose.".format(self.public_key))
         self.send_accept(msg_id, dialogue_id, origin, msg_id + 1)
 

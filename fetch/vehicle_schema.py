@@ -37,6 +37,6 @@ DRIVER_ID = AttributeSchema("driver_id",
                             attribute_description="Driver.")
 
 PASSENGERS = AttributeSchema("passengers_ids",
-                             List[str],
+                             str,
                              is_attribute_required=False,
                              attribute_description="All passangers.")

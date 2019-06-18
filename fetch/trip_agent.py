@@ -85,6 +85,7 @@ if __name__ == "__main__":
     agent.register_service(77, agent.trip_description)
 
     try:
+        print("[{0}]: Trip: request for a trip sent.".format(agent.public_key))
         agent.run()
     except Exception as ex:
         print("EXCEPTION:", ex)

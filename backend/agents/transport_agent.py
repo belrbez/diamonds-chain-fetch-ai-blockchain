@@ -75,12 +75,12 @@ class TransportAgent(OEFAgent):
 
 
 def add_transport_agent(data):
-    agent = TransportAgent(data, 'scooter', oef_addr="185.91.52.11",
-                           oef_port=10001)
+    agent = TransportAgent(data , str(randint(1, 1e9)).replace('0', 'A').replace('1', 'B'), oef_addr="185.91.52.11",
+                           oef_prt=10000)
     print('Create agent')
     agent.connect()
     print('Connected to agent')
-    agent.register_service(77, agent.scooter_description)
+    agent.register_service(randint(1, 1e9), agent.scooter_description)
 
     print("[{}]: Waiting for clients...".format(agent.public_key))
     try:

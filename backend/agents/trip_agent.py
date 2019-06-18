@@ -61,7 +61,7 @@ def add_agent(data):
     # create and connect the agent
     print('Add agent: ' + data['name'])
     agent = TripAgent(data, str(randint(1, 1e9)).replace('0', 'A').replace('1', 'B'), oef_addr="185.91.52.11",
-                      oef_port=10001)
+                      oef_port=10000)
     agent.connect()
 
     time.sleep(2)

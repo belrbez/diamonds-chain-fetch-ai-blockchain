@@ -9,6 +9,7 @@ from typing import List
 from oef.proxy import PROPOSE_TYPES
 from oef.query import Eq, Constraint
 from oef.query import Query
+from random import randint
 
 import asyncio
 import time
@@ -59,7 +60,7 @@ class TripAgent(OEFAgent):
 def add_agent(data):
     # create and connect the agent
     print('Add agent: ' + data['name'])
-    agent = TripAgent(data, data['name'], oef_addr="185.91.52.11", oef_port=10000)
+    agent = TripAgent(data, abs(randint), oef_addr="185.91.52.11", oef_port=10000)
     agent.connect()
 
     time.sleep(2)

@@ -21,6 +21,8 @@
 import pickle
 import json
 import pprint
+from email._header_value_parser import Address
+from xml.dom.minidom import Entity
 
 from oef.agents import OEFAgent
 
@@ -35,16 +37,24 @@ from oef.schema import Description, Location
 import asyncio
 import time
 
+from trip_schema import TRIP_DATAMODEL
+
+
 class TripAgent(OEFAgent):
-    trip_description = Description(
-        {
-            "account_id": "1",
-            "trip_id": "1",
-            "from_location": 1,
-            "to_location": Location(52.2057092, 0.1183431)
+    def __init__(self, data, *args, **kwargs):
+        super(TripAgent, self).__init__(*args, **kwargs)
+
+        self._entity = Entity()
+        self._address = Address(self._entity)
+
+        self.data = {
+            "account_id": data['account_id'],
+            "trip_id": data['trip_id'],
+            "from_location": data['from_location'],
+            "to_location": data['to_location']
         }
-    )
-    possible_trips = []
+        self.trip_description = Description(self.data, TRIP_DATAMODEL())
+        self.possible_trips = []
 
     def on_cfp(self, msg_id: int, dialogue_id: int, origin: str, target: int, query: CFP_TYPES):
         """Send a simple Propose to the sender of the CFP."""

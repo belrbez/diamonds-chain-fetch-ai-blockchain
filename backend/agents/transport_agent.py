@@ -46,18 +46,18 @@ class TransportAgent(OEFAgent):
         self._entity = Entity()
         self._address = Address(self._entity)
 
-        self.data_model = {
+        self.data = {
             'price_per_km': data['price_per_km'],
             'state': "WAIT",
             'driver_id': None,
             'passengers_ids': None,
             'position': data['position']
         }
-        self.transport_description = Description(self.data_model, TRANSPORT_DATAMODEL())
+        self.transport_description = Description(self.data, TRANSPORT_DATAMODEL())
 
     def search_drivers(self):
         print("[{}]: Transport: Searching for trips...".format(self.public_key))
-        query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Eq(self.data_model['position']))])
+        query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Eq(self.data['position']))])
         agent.search_services(0, query)
 
     def on_search_result(self, search_id: int, agents: List[str]):
@@ -71,8 +71,8 @@ class TransportAgent(OEFAgent):
         for agent in agents:
             print("[{0}]: Transport: Sending cfp to trip {1}".format(self.public_key, agent))
             # prepare the proposal with a given price.
-            proposal = Description({"price_per_km": self.data_model['price_per_km']})
-            print("[{}]: Transport: Sending propose with price: {}".format(self.public_key, self.data_model['price_per_km']))
+            proposal = Description({"price_per_km": self.data['price_per_km']})
+            print("[{}]: Transport: Sending propose with price: {}".format(self.public_key, self.data['price_per_km']))
             self.send_propose(1, 0, agent, 0, [proposal])
 
     def on_accept(self, msg_id: int, dialogue_id: int, origin: str, target: int):

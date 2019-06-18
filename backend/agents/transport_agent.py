@@ -100,7 +100,7 @@ if __name__ == "__main__":
     agent.connect()
     agent.register_service(77, agent.transport_description)
 
-    schedule.every(10).minutes.do(agent.search_drivers)
+    schedule.every(10).seconds.do(agent.search_drivers)
 
     print("[{}]: Transport: Launching new transport agent...".format(agent.public_key))
     try:

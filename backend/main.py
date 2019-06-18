@@ -41,6 +41,7 @@ def get_journey_request(trip_id: str):
 
 
 def add_transport_agent_to_oef():
+    print('Attempt to register transport agent')
     data = {
         'id': uuid4().hex,
         'location': {

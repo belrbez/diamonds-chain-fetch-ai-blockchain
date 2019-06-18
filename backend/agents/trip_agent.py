@@ -17,7 +17,7 @@ import time
 class TripAgent(OEFAgent):
 
     def __init__(self, data, *args, **kwargs):
-        super(TripAgent, args, kwargs)
+        super(TripAgent, self).__init__(args, kwargs)
         self.data = data
 
     def on_search_result(self, search_id: int, agents: List[str]):

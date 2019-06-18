@@ -41,7 +41,6 @@ def get_journey_request(trip_id: str):
 
 
 def add_transport_agent_to_oef():
-    print('Attempt to register transport agent')
     data = {
         'id': uuid4().hex,
         'location': {
@@ -60,5 +59,7 @@ if __name__ == '__main__':
     app.run(port=environ.get('SERVER_PORT', 8001))
 
     transport_number = environ.get('TRANSPORT_NUMBER', 3)
+    print(transport_number)
     for i in range(transport_number):
+        print('Attempt to register transport agent')
         Thread(target=add_transport_agent_to_oef).start()

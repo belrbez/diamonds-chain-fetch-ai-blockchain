@@ -25,7 +25,6 @@ import time
 from typing import List
 
 from oef.query import Query, Constraint, Eq
-from vehicle_schema import PASSENGERS
 from oef.agents import OEFAgent
 from oef.messages import CFP_TYPES
 from oef.schema import Description
@@ -33,7 +32,7 @@ from fetchai.ledger.api import LedgerApi
 from fetchai.ledger.contract import SmartContract
 from fetchai.ledger.crypto import Entity, Address
 
-from ledger.trip_schema import FROM_LONGITUDE, FROM_LATITUDE
+from fetch.trip_schema import FROM_LONGITUDE, FROM_LATITUDE
 
 
 class VehicleAgent(OEFAgent):
@@ -103,7 +102,7 @@ class VehicleAgent(OEFAgent):
 
 
 if __name__ == "__main__":
-    agent = VehicleAgent("vehicle", oef_addr="127.0.0.1", oef_port=10000)
+    agent = VehicleAgent("vehicle", oef_addr="185.91.52.11", oef_port=10001)
     agent.connect()
     agent.register_service(77, agent.vehicle_description)
 

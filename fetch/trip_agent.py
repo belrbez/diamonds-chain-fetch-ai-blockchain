@@ -80,7 +80,7 @@ class TripAgent(OEFAgent):
 
 if __name__ == "__main__":
     # create and connect the agent
-    agent = TripAgent("TripAgent", oef_addr="127.0.0.1", oef_port=10000)
+    agent = TripAgent("TripAgent", oef_addr="185.91.52.11", oef_port=10001)
     agent.connect()
     agent.register_service(77, agent.trip_description)
 

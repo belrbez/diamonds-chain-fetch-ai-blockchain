@@ -28,7 +28,7 @@ def add_journey_request():
     data = flask.request.json
     data['trip_id'] = uuid4().hex
     data['status'] = 'WAIT'
-    Thread(target=add_agent_to_oef, args=data).start()
+    Thread(target=add_agent_to_oef, args=(data)).start()
     trips[data['account_id']] = data
     return 'ok'
 

@@ -19,7 +19,7 @@
 # ------------------------------------------------------------------------------
 
 
-from oef.schema import DataModel, AttributeSchema
+from oef.schema import DataModel, AttributeSchema, Location
 
 PERSON_ID = AttributeSchema("account_id",
                             str,
@@ -31,22 +31,12 @@ TRIP_ID = AttributeSchema("trip_id",
                           is_attribute_required=True,
                           attribute_description="Person ID.")
 
-FROM_LONGITUDE = AttributeSchema("from_longitude",
-                                 int,
+FROM_LOCATION = AttributeSchema("from_location",
+                                 Location,
                                  is_attribute_required=True,
                                  attribute_description="Longitude of FROM point.")
 
-FROM_LATITUDE = AttributeSchema("from_latitude",
-                                int,
-                                is_attribute_required=True,
-                                attribute_description="Latitude of FROM point.")
-
-TO_LONGITUDE = AttributeSchema("to_longitude",
-                               int,
+TO_LOCATION = AttributeSchema("to_location",
+                               Location,
                                is_attribute_required=True,
                                attribute_description="Longitude of TO point.")
-
-TO_LATITUDE = AttributeSchema("to_latitude",
-                              int,
-                              is_attribute_required=True,
-                              attribute_description="Latitude of TO point.")

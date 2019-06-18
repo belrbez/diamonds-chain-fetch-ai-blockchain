@@ -19,7 +19,7 @@
 # ------------------------------------------------------------------------------
 from typing import List
 
-from oef.schema import DataModel, AttributeSchema
+from oef.schema import DataModel, AttributeSchema, Location
 
 PRICE_PER_KM = AttributeSchema("price_per_km",
                                int,
@@ -40,3 +40,8 @@ PASSENGERS = AttributeSchema("passengers_ids",
                              str,
                              is_attribute_required=False,
                              attribute_description="All passangers.")
+
+POSITION = AttributeSchema("position",
+                                Location,
+                                is_attribute_required=True,
+                                attribute_description="Latitude of transport.")

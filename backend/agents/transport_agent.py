@@ -23,11 +23,12 @@ import json
 import pprint
 import time
 from typing import List
+import schedule
 
 from oef.query import Query, Constraint, Eq
 from oef.agents import OEFAgent
 from oef.messages import CFP_TYPES
-from oef.schema import Description
+from oef.schema import Description, Location
 from fetchai.ledger.api import LedgerApi
 from fetchai.ledger.contract import SmartContract
 from fetchai.ledger.crypto import Entity, Address
@@ -43,20 +44,23 @@ class TransportAgent(OEFAgent):
             "price_per_km": 10,
             "state": "WAIT",
             "driver_id": "",
-            "passengers_ids": ""
+            "passengers_ids": "",
+            "position": Location(52.2057092, 0.1183431)
         }
     )
 
     def __init__(self, *args, **kwargs):
-      super(TransportAgent, self).__init__(*args, **kwargs)
+        super(TransportAgent, self).__init__(*args, **kwargs)
 
-      self._entity = Entity()
-      self._address = Address(self._entity)
+        self._entity = Entity()
+        self._address = Address(self._entity)
 
+        # schedule.every(10).minutes.do(search)
 
     def search(self):
-
-        return
+        print("[{}]: Transport: Searching for trips...".format(self.public_key))
+        query = Query([Constraint(FROM_LONGITUDE.name, Eq(1)), Constraint(FROM_LATITUDE.name, Eq(1))])
+        agent.search_services(0, query)
 
     def on_search_result(self, search_id: int, agents: List[str]):
         """For every agent returned in the service search, send a CFP to obtain resources from them."""
@@ -68,17 +72,13 @@ class TransportAgent(OEFAgent):
         print("[{0}]: Transport: Trips found: {1}".format(self.public_key, agents))
         for agent in agents:
             print("[{0}]: Transport: Sending cfp to trip {1}".format(self.public_key, agent))
-            # we send a 'None' query, meaning "give me all the resources you can propose."
-            query = None
 
             price = 1
 
             # prepare the proposal with a given price.
             proposal = Description({"price_per_km": price})
-            print("[{}]: Transport: Sending propose at price: {}".format(self.public_key, price))
+            print("[{}]: Transport: Sending propose with price: {}".format(self.public_key, price))
             self.send_propose(1, 0, agent, 0, [proposal])
-        # self.send_cfp(1, 0, agent, 0, query)
-        # self.send_propose(msg_id + 1, dialogue_id, origin, target + 1, [proposal])
 
 
     def on_accept(self, msg_id: int, dialogue_id: int, origin: str, target: int):
@@ -106,12 +106,7 @@ if __name__ == "__main__":
     agent.connect()
     agent.register_service(77, agent.transport_description)
 
-
-    time.sleep(10)
-    query = Query([Constraint(FROM_LONGITUDE.name, Eq(1)), Constraint(FROM_LATITUDE.name, Eq(1))])
-    agent.search_services(0, query)
-
-    print("[{}]: Transport: Waiting for trips...".format(agent.public_key))
+    print("[{}]: Transport: Launching new transport agent...".format(agent.public_key))
     try:
         agent.run()
     finally:

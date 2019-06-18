@@ -30,7 +30,7 @@ from oef.messages import CFP_TYPES
 from oef.proxy import PROPOSE_TYPES
 from oef.query import Eq, Constraint
 from oef.query import Query
-from oef.schema import Description
+from oef.schema import Description, Location
 
 import asyncio
 import time
@@ -40,23 +40,13 @@ class TripAgent(OEFAgent):
         {
             "account_id": "1",
             "trip_id": "1",
-            "from_longitude": 1,
-            "from_latitude": 1,
-            "to_longitude": 2,
-            "to_latitude": 2
+            "from_location": 1,
+            "to_location": Location(52.2057092, 0.1183431)
         }
     )
 
     def on_cfp(self, msg_id: int, dialogue_id: int, origin: str, target: int, query: CFP_TYPES):
         """Send a simple Propose to the sender of the CFP."""
-        print("[{0}]: Trip: Received CFP from {1}".format(self.public_key, origin))
-
-        price = 1
-
-        # prepare the proposal with a given price.
-        proposal = Description({"price_per_km": price})
-        print("[{}]: Trip: Sending propose at price: {}".format(self.public_key, price))
-        self.send_propose(msg_id + 1, dialogue_id, origin, target + 1, [proposal])
 
     def on_propose(self, msg_id: int, dialogue_id: int, origin: str, target: int, proposals: PROPOSE_TYPES):
         """When we receive a Propose message, answer with an Accept."""

@@ -51,6 +51,7 @@ def add_transport_agent_to_oef():
     data = {
         'id': uuid4().hex,
         'position': Location(uniform(0, 10), uniform(0, 10)),
+        'price_per_km': uniform(1, 3),
         'status': 'WAIT'
     }
     loop = asyncio.new_event_loop()

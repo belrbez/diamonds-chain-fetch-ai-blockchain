@@ -18,7 +18,7 @@ import time
 class TripAgent(OEFAgent):
 
     def __init__(self, data, *args, **kwargs):
-        super(TripAgent, self).__init__(args, kwargs)
+        super(TripAgent, self).__init__(*args, **kwargs)
         self.data = data
 
     def on_search_result(self, search_id: int, agents: List[str]):
@@ -61,7 +61,7 @@ def add_agent(data):
     # create and connect the agent
     print('Add agent: ' + data['name'])
     agent = TripAgent(data, str(randint(1, 1e9)).replace('0', 'A').replace('1', 'B'), oef_addr="185.91.52.11",
-                      oef_port=10000)
+                      oef_port=10001)
     agent.connect()
 
     time.sleep(2)

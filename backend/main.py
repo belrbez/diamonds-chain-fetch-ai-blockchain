@@ -52,8 +52,8 @@ def add_transport_agent_to_oef():
     }
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
-    add_transport_agent(data)
     print('Appear transport agent: ' + str(data))
+    add_transport_agent(data)
 
 
 if __name__ == '__main__':

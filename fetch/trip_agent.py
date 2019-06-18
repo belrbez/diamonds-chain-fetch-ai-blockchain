@@ -40,10 +40,10 @@ class TripAgent(OEFAgent):
         {
             "account_id": "1",
             "trip_id": "1",
-            "from_longitude": "1",
-            "from_latitude": "1",
-            "to_longitude": None,
-            "to_latitude": None
+            "from_longitude": 1,
+            "from_latitude": 1,
+            "to_longitude": "",
+            "to_latitude": ""
         }
     )
 

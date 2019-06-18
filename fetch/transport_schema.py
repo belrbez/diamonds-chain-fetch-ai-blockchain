@@ -29,7 +29,7 @@ PRICE_PER_KM = AttributeSchema("price_per_km",
 STATE = AttributeSchema("state",
                         str,
                         is_attribute_required=True,
-                        attribute_description="Current state of vehicle.")
+                        attribute_description="Current state of transport.")
 
 DRIVER_ID = AttributeSchema("driver_id",
                             str,

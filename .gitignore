@@ -10,7 +10,7 @@ target/
 .springBeans
 
 ### IntelliJ IDEA ###
-.idea
+/.idea
 .*/.idea
 *.iws
 *.iml
@@ -20,7 +20,7 @@ target/
 nbproject/private/
 build/
 nbbuild/
-dist/
+K
 nbdist/
 .nb-gradle/
 

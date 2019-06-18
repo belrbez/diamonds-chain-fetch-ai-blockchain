@@ -50,7 +50,7 @@ class RiderAgent(OEFAgent):
 
 def add_agent(data):
     # create and connect the agent
-    print('Add agent: ' + data)
+    print('Add agent: ' + data['name'])
     agent = RiderAgent("RiderAgent", oef_addr="185.91.52.11", oef_port=10000)
     agent.connect()
 

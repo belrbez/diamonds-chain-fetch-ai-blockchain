@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Account} from '../model/account';
+import {HttpClient} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,8 @@ export class AccountService {
 
   private accounts: Account[];
 
-  constructor() {
+  constructor(
+    private http: HttpClient) {
     this.accounts = [
       {
         id: 'id1',
@@ -27,5 +29,21 @@ export class AccountService {
       return found[0];
     }
     return null;
+  }
+
+  public drive(account: Account, pick: any) {
+    this.http.post('fuckyou', {
+      id: account.id,
+      name: account.name,
+      start: {
+        logitude: pick.longitudeFrom,
+        latitude: pick.latitudeFrom
+      },
+      end: {
+        logitude: pick.longitudeTo,
+        latitude: pick.latitudeTo
+      },
+      isDriver: account.isDriver
+    });
   }
 }

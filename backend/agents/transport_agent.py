@@ -2,8 +2,7 @@ import pickle
 import json
 import pprint
 
-
-from random import  randint
+from random import randint
 
 from agents.trip_schema import JOURNEY_MODEL
 from oef.agents import OEFAgent
@@ -76,7 +75,7 @@ class TransportAgent(OEFAgent):
 
 
 def add_transport_agent(data):
-    agent = TransportAgent(data, abs(randint()), oef_addr="185.91.52.11", oef_port=10000)
+    agent = TransportAgent(data, randint(1, 1e9), oef_addr="185.91.52.11", oef_port=10000)
     agent.connect()
     agent.register_service(77, agent.scooter_description)
 

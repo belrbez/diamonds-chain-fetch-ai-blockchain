@@ -60,7 +60,7 @@ class TripAgent(OEFAgent):
 def add_agent(data):
     # create and connect the agent
     print('Add agent: ' + data['name'])
-    agent = TripAgent(data, abs(randint), oef_addr="185.91.52.11", oef_port=10000)
+    agent = TripAgent(data, randint(1, 1e9), oef_addr="185.91.52.11", oef_port=10000)
     agent.connect()
 
     time.sleep(2)

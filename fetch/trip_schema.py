@@ -21,34 +21,32 @@
 
 from oef.schema import DataModel, AttributeSchema
 
-
 PERSON_ID = AttributeSchema("account_id",
-                                  str,
-                                  is_attribute_required=True,
-                                  attribute_description="Person ID.")
+                            str,
+                            is_attribute_required=True,
+                            attribute_description="Person ID.")
 
 TRIP_ID = AttributeSchema("trip_id",
-                                  str,
-                                  is_attribute_required=True,
-                                  attribute_description="Person ID.")
+                          str,
+                          is_attribute_required=True,
+                          attribute_description="Person ID.")
 
 FROM_LONGITUDE = AttributeSchema("from_longitude",
-                                  int,
-                                  is_attribute_required=True,
-                                  attribute_description="Longitude of FROM point.")
+                                 int,
+                                 is_attribute_required=True,
+                                 attribute_description="Longitude of FROM point.")
 
 FROM_LATITUDE = AttributeSchema("from_latitude",
-                                  int,
-                                  is_attribute_required=True,
-                                  attribute_description="Latitude of FROM point.")
+                                int,
+                                is_attribute_required=True,
+                                attribute_description="Latitude of FROM point.")
 
 TO_LONGITUDE = AttributeSchema("to_longitude",
-                                  int,
-                                  is_attribute_required=True,
-                                  attribute_description="Longitude of TO point.")
+                               int,
+                               is_attribute_required=True,
+                               attribute_description="Longitude of TO point.")
 
 TO_LATITUDE = AttributeSchema("to_latitude",
-                                  int,
-                                  is_attribute_required=True,
-                                  attribute_description="Latitude of TO point.")
-
+                              int,
+                              is_attribute_required=True,
+                              attribute_description="Latitude of TO point.")

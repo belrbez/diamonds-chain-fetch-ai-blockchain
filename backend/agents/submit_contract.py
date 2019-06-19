@@ -5,7 +5,7 @@ from fetchai.ledger.contract import SmartContract
 from fetchai.ledger.crypto import Entity, Address
 
 
-def main(name: str):
+def call(name: str)-> SmartContract:
     # Create keypair for the contract owner
     provider1 = Entity()
     address1 = Address(provider1)
@@ -30,6 +30,9 @@ def main(name: str):
     # Printing balance of the creating address1
     print(contract.query(api, 'getAccountRides', "1"))
 
+def main():
+    call("./full_contract.etch")
+
 if __name__ == '__main__': 
     # Loading contract
     # if len(sys.argv) != 2:
@@ -39,4 +42,4 @@ if __name__ == '__main__':
     # with open(sys.argv[1], "r") as fb:
     #   source = fb.read()
 
-    main("./full_contract.etch")
+    call("./full_contract.etch")

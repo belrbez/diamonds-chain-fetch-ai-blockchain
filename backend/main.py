@@ -56,6 +56,7 @@ def get_journey_request(trip_id: str):
         'longitude': data['position'].longitude,
         'latitude': data['position'].latitude
     }
+    print(str(data['position']))
     return to_json(data)
 
 

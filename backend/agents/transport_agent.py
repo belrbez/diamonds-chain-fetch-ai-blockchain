@@ -135,8 +135,12 @@ class TransportAgent(OEFAgent):
         self.send_transp_loc(origin, cur_loc, transp_status)
         self.data['location_latitude'] = cur_loc.latitude
         self.data['location_longitude'] = cur_loc.longitude
-        descr = 'Picked up account' if transp_status == 'Getting to trip' else 'Trip finished'
-        print("[{0}]: Transport: {1}.".format(self.public_key, descr))
+        if transp_status == 'Getting to trip':
+            print("[{0}]: Transport: {1}.".format(self.public_key, 'Picked up account'))
+        else:
+            print("[{0}]: Transport: {1}.".format(self.public_key, 'Trip finished'))
+            self.data['state'] = 'WAIT'
+            self.search_drivers()
 
     def send_transp_loc(self, origin, loc, status):
         msg_id = randint(1, 1e9)
@@ -161,7 +165,6 @@ class TransportAgent(OEFAgent):
         # decentralized_trip_contract
         contract = {"contract": "data"}
 
-        self.data['state'] = 'WAIT'
         # schedule.clear('driving-jobs')
 
         # Sending contract
@@ -169,8 +172,6 @@ class TransportAgent(OEFAgent):
         print("[{0}]: Transport: Sending contract to {1}".format(self.public_key, origin))
         self.send_message(0, dialogue_id, origin, encoded_data)
         self.request_agent_location(origin)
-
-        self.search_drivers()
 
     def request_agent_location(self, origin):
         msg_id = randint(1, 1e9)

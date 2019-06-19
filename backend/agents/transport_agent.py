@@ -28,7 +28,7 @@ class TransportAgent(OEFAgent):
             'location_longitude': data['location'].longitude
         }
         self.transport_description = Description(self.data, TRANSPORT_DATAMODEL())
-        self.distance_allowed_area = 3.0
+        self.distance_allowed_area = 5.0
 
     def search_drivers(self):
         print("[{0}]: Transport: Searching for Passenger trips {1} with allowed distance {2}..."

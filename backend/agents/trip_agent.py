@@ -25,11 +25,12 @@ class TripAgent(OEFAgent):
             "trip_id": data['trip_id'],
             "from_location_latitude": float(data['from_location'].latitude),
             "from_location_longitude": float(data['from_location'].longitude),
-            "to_location_latitude": float(data['to_location'].latitude),
+            "to_location_latitude": float(data['to_location'].laktitude),
             "to_location_longitude": float(data['to_location'].longitude),
             "distance_area": data['distance_area'],
         }
         self.trip_description = Description(self.data, TRIP_DATAMODEL())
+        self.data['state'] = 'free'
         self.data['cur_loc'] = Location(self.data['from_location_latitude'], self.data['from_location_longitude'])
         self.possible_trips = []
 
@@ -45,8 +46,14 @@ class TripAgent(OEFAgent):
         # for i, p in enumerate(proposals):
         #     if p.values['location']:
         # TODO: check if proposals['location'] is near trip
+        if self.data['state'] == 'drive':
+            print('Decline transport because already driving')
+            self.on_decline(msg_id, dialogue_id, origin, target)
+            return
+
         print("[{0}]: Trip: Accepting Propose.".format(self.public_key))
         self.send_accept(msg_id, dialogue_id, origin, msg_id + 1)
+        self.data['state'] = 'drive'
 
     def on_message(self, msg_id: int, dialogue_id: int, origin: str, content: bytes):
         """Extract and print data from incoming (simple) messages."""

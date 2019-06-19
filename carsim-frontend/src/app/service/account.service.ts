@@ -48,7 +48,7 @@ export class AccountService {
   public getTrip(accountId: string, tripId: string): Promise<Trip | null> {
     return new Promise<Trip | null>((resolve, reject) => {
 
-        this.http.get(`api/trips/${tripId}`).subscribe((trip: Trip | null) => {
+        this.http.get(`http://185.91.52.11:10003/trips/${tripId}`).subscribe((trip: Trip | null) => {
           if (trip != null) {
             resolve(trip);
           } else {
@@ -70,7 +70,7 @@ export class AccountService {
   }
 
   public drive(account: Account, pick: any): Observable<Trip> {
-    return this.http.post<Trip>('api/trips', {
+    return this.http.post<Trip>('http://185.91.52.11:10003/trips', {
       account_id: account.id,
       name: account.name,
       start: {

@@ -35,8 +35,8 @@ class TransportAgent(OEFAgent):
                                                                                                             'location'].latitude,
                                                                                                         self.distance_allowed_area))
         query = Query(
-            [Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['location'], 100_500_000)),
-             Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['location'], 100_500_000))])
+            [Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area)),
+             Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area))])
         self.search_services(0, query)
 
     def search_passengers(self):

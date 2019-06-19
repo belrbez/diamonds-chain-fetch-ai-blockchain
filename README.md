@@ -1,6 +1,6 @@
 # DiamondsChain Team
 
-##InstaDrive.io Project
+## InstaDrive.io Project
 
 https://hackathon.dltstax.net/#/workspace/DiamondsChain
 

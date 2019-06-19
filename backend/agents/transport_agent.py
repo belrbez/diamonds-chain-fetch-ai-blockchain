@@ -103,6 +103,7 @@ class TransportAgent(OEFAgent):
 def cron(delay, interval, agent):
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
+    asyncio._set_running_loop(loop)
     time.sleep(delay)
     while 1:
         agent.search_drivers()

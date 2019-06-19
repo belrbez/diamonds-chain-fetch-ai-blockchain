@@ -113,7 +113,7 @@ def add_transport_agent(data):
     agent.register_service(randint(1, 1e9), agent.transport_description)
 
     print("[{}]: Transport: PreLaunching new transport agent...".format(agent.public_key))
-    Thread(target=cron(5, 1, agent))
+    Thread(target=cron(5, 1, agent)).start()
     print("[{}]: Transport: Launching new transport agent...".format(agent.public_key))
 
     try:

@@ -50,7 +50,7 @@ def add_transport_agent_to_oef():
     print('Attempt to add transport agent')
     data = {
         'id': uuid4().hex,
-        'location': Location(uniform(59, 29), uniform(61, 31)),
+        'location': Location(uniform(59, 61), uniform(29, 31)),
         'price_per_km': uniform(1, 3),
         'status': 'WAIT'
     }

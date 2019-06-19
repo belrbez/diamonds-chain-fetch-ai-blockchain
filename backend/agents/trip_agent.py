@@ -29,8 +29,8 @@ class TripAgent(OEFAgent):
             "to_location_longitude": float(data['to_location'].longitude),
             "distance_area": data['distance_area'],
         }
-        self.data['cur_loc'] = Location(self.data['from_location_latitude'], self.data['from_location_longitude'])
         self.trip_description = Description(self.data, TRIP_DATAMODEL())
+        self.data['cur_loc'] = Location(self.data['from_location_latitude'], self.data['from_location_longitude'])
         self.possible_trips = []
 
     def on_cfp(self, msg_id: int, dialogue_id: int, origin: str, target: int, query: CFP_TYPES):

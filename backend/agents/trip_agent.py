@@ -83,7 +83,7 @@ class TripAgent(OEFAgent):
             return
 
         if msg['type'] == 'location':
-            print('Trip Get location', msg)
+            # print('Trip Get location', msg)
             if msg['status'] == 'Trip started':
                 self.data['cur_loc'] = Location(msg['location_latitude'], msg['location_longitude'])
                 print('Account upd location to {} {}'.format(self.data['cur_loc'].latitude,

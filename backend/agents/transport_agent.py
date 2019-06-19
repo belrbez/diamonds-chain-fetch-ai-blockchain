@@ -32,7 +32,7 @@ class TransportAgent(OEFAgent):
         }
         self.transport_description = Description(self.data, TRANSPORT_DATAMODEL())
         self.distance_allowed_area = 5
-        self.velocity = 0.2
+        self.velocity = 0.0005
         # self.contract = data['rent_contract']
 
     def search_drivers(self):

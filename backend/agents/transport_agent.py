@@ -122,8 +122,8 @@ class TransportAgent(OEFAgent):
         y_diff_sign = -1 if y_diff < 0 else 1
 
         time.sleep(1)
-        while abs(cur_loc.latitude - target_point.latitude) <= x_diff and abs(
-                cur_loc.longitude - target_point.longitude) <= y_diff:
+        while abs(cur_loc.latitude - target_point.latitude) <= abs(x_diff) and abs(
+                cur_loc.longitude - target_point.longitude) <= abs(y_diff):
             cur_loc = Location(cur_loc.latitude + x_velocity * x_diff_sign,
                                cur_loc.longitude + y_velocity * y_diff_sign)
             print('Update location of transport to {} {}'.format(cur_loc.latitude, cur_loc.longitude))
@@ -154,7 +154,6 @@ class TransportAgent(OEFAgent):
         # decentralized_trip_contract
         contract = {"contract": "data"}
 
-        time.sleep(20)
         self.data['state'] = 'WAIT'
         # schedule.clear('driving-jobs')
         print("[{0}]: Transport: Trip finished.".format(self.public_key))

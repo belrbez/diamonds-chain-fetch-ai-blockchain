@@ -139,6 +139,9 @@ class TransportAgent(OEFAgent):
             print("[{0}]: Transport: {1}.".format(self.public_key, 'Picked up account'))
         else:
             print("[{0}]: Transport: {1}.".format(self.public_key, 'Trip finished'))
+            self.send_message(randint(1, 1e9), randint(1, 1e9), origin, json.dumps({
+                'type': 'finished'
+            }).encode('utf-8'))
             self.data['state'] = 'WAIT'
             self.search_drivers()
 
@@ -163,7 +166,7 @@ class TransportAgent(OEFAgent):
         # Preparing contract
         # PLACE HOLDER TO PREPARE AND SIGN TRANSACTION
         # decentralized_trip_contract
-        contract = {"contract": "data"}
+        contract = {'type': 'contract', "contract": "data"}
 
         # schedule.clear('driving-jobs')
 
@@ -177,7 +180,7 @@ class TransportAgent(OEFAgent):
         msg_id = randint(1, 1e9)
         dialogue_id = randint(1, 1e9)
         self.send_message(msg_id, dialogue_id, origin, json.dumps({
-            'request': 'location'
+            'type': 'request'
         }).encode('utf-8'))
 
     def on_start_trip(self):

@@ -56,24 +56,37 @@ class TripAgent(OEFAgent):
         print("[{0}]: Trip: Received msg from {1}".format(self.public_key, origin))
         msg = json.loads(content.decode("utf-8"))
 
-        if 'type' in msg and msg['type'] == 'location':
+        if 'type' not in msg:
+            print('unkown type')
+            return
+
+        if msg['type'] == 'contract':
+            print('Receivied contract from transport')
+            return
+
+        if msg['type'] == 'request':
+            print('Trip received request from transport')
+            self.send_message(msg_id, dialogue_id, origin, json.dumps({
+                'type': 'location',
+                'from_location_latitude': self.data['from_location_latitude'],
+                'from_location_longitude': self.data['from_location_longitude'],
+                'to_location_latitude': self.data['to_location_latitude'],
+                'to_location_longitude': self.data['to_location_longitude']
+            }).encode('utf-8'))
+            return
+
+        if msg['type'] == 'location':
+            print('Trip Get location', msg)
             if msg['status'] == 'Trip started':
                 self.data['cur_loc'] = Location(msg['location_latitude'], msg['location_longitude'])
                 print('Account upd location to {} {}'.format(self.data['cur_loc'].latitude,
                                                              self.data['cur_loc'].longitude))
             return
 
-        print("[{0}]: Trip: READY TO SUBMIT transaction: {1}".format(self.public_key, msg))
-
-        self.send_message(msg_id, dialogue_id, origin, json.dumps({
-            'type': 'location',
-            'from_location_latitude': self.data['from_location_latitude'],
-            'from_location_longitude': self.data['from_location_longitude'],
-            'to_location_latitude': self.data['to_location_latitude'],
-            'to_location_longitude': self.data['to_location_longitude']
-        }).encode('utf-8'))
-        self.unregister_agent(randint(1, 1e9))
-        self.stop()
+        if msg['type'] == 'finish':
+            print('Trip agent unregister')
+            self.unregister_agent(randint(1, 1e9))
+            self.stop()
 
 
 def add_trip_agent(data):

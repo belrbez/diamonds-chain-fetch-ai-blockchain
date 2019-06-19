@@ -119,16 +119,12 @@ class TransportAgent(OEFAgent):
 
 def add_transport_agent(data):
     pub_key = str(randint(1, 1e9)).replace('0', 'A').replace('1', 'B')
-    agent = TransportAgent(data, pub_key, oef_addr="185.91.52.11", oef_port=10000)
+    agent = TransportAgent(data, pub_key, oef_addr="127.0.0.1", oef_port=10000)
     agent.connect()
     agent.register_service(randint(1, 1e9), agent.transport_description)
 
     print("[{}]: Transport: Searching for Passenger trips...".format(agent.public_key))
-    query = Query(
-        [Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(agent.data['location'], agent.distance_allowed_area)),
-         Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(agent.data['location'], agent.distance_allowed_area)),
-         Constraint(TRIP_DATAMODEL.CAN_BE_DRIVER.name, Eq(True))])
-    agent.search_services(0, query)
+    agent.search_drivers()
 
     print("[{}]: Transport: Launching new transport agent...".format(agent.public_key))
 

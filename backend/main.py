@@ -36,7 +36,7 @@ def add_journey_request():
     data['distance_area'] = uniform(0, 2)
     data['position'] = data['from_location']
     Thread(target=add_agent_to_oef, args=(data,)).start()
-    trips[data['account_id']] = data
+    trips[data['trip_id']] = data
     return data['trip_id']
 
 

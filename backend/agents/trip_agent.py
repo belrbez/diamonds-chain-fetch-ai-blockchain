@@ -25,7 +25,7 @@ class TripAgent(OEFAgent):
             "trip_id": data['trip_id'],
             "from_location_latitude": float(data['from_location'].latitude),
             "from_location_longitude": float(data['from_location'].longitude),
-            "to_location_latitude": float(data['to_location'].laktitude),
+            "to_location_latitude": float(data['to_location'].latitude),
             "to_location_longitude": float(data['to_location'].longitude),
             "distance_area": data['distance_area'],
         }

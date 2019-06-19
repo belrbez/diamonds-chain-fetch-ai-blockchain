@@ -37,7 +37,7 @@ def add_journey_request():
     data['position'] = data['from_location']
     Thread(target=add_agent_to_oef, args=(data,)).start()
     trips[data['trip_id']] = data
-    return data['trip_id']
+    return to_json({"trip_id": data['trip_id']})
 
 
 @app.route('/trips/<trip_id>', methods=['GET'])

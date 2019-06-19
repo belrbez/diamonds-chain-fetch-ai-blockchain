@@ -159,7 +159,7 @@ class TransportAgent(OEFAgent):
         dialogue_id = randint(1, 1e9)
         self.send_message(msg_id, dialogue_id, origin, json.dumps({
             'request': 'location'
-        }))
+        }).encode('utf-8'))
 
     def on_start_trip(self):
         return

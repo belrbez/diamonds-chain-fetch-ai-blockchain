@@ -36,7 +36,7 @@ def add_journey_request():
     data['distance_area'] = uniform(0, 2)
     Thread(target=add_agent_to_oef, args=(data,)).start()
     trips[data['account_id']] = data
-    return 'ok'
+    return data['trip_id']
 
 
 @app.route('/trips/<trip_id>', methods=['GET'])

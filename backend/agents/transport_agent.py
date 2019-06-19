@@ -140,7 +140,7 @@ class TransportAgent(OEFAgent):
                 abs(cur_loc.longitude - target_point.longitude) >= abs(y_velocity):
             cur_loc = Location(cur_loc.latitude + x_velocity * x_diff_sign,
                                cur_loc.longitude + y_velocity * y_diff_sign)
-            print('Update location of transport to {} {}'.format(cur_loc.latitude, cur_loc.longitude))
+            # print('Update location of transport to {} {}'.format(cur_loc.latitude, cur_loc.longitude))
             self.send_transp_loc(origin, cur_loc, transp_status)
             time.sleep(1)
         cur_loc = target_point

@@ -36,7 +36,6 @@ class TripAgent(OEFAgent):
     def on_propose(self, msg_id: int, dialogue_id: int, origin: str, target: int, proposals: PROPOSE_TYPES):
         """When we receive a Propose message, answer with an Accept."""
         print("[{0}]: Trip: Received propose from agent {1}".format(self.public_key, origin))
-        pos_loc: Location = self.data['position']
         # if pos_loc.distance(proposals['location']) > self.data['distance_area']:
         #     print("[{0}]: Trip: Proposal with location rejected {1}: {2}".format(self.public_key, proposals["location"]))
         #     return
@@ -65,7 +64,7 @@ def add_trip_agent(data):
     agent.connect()
     msg_id = randint(1, 1e9)
     agent.register_service(msg_id, agent.trip_description)
-    print('Add agent Trip: ' + data['name'] + str(data['from_location'].latitude))
+    print('Add agent Trip: ', data['name'], str(data['from_location'].latitude))
 
     try:
         print("[{0}]: Trip: request for a trip sent.".format(agent.public_key))

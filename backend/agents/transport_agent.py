@@ -30,20 +30,26 @@ class TransportAgent(OEFAgent):
         self.distance_allowed_area = 50000.0
 
     def search_drivers(self):
-        print("[{0}]: Transport: Searching for Passenger trips {1} with allowed distance {2}...".format(self.public_key, self.data['location'].latitude, self.distance_allowed_area))
-        query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area)),
-                       Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area))])
+        print("[{0}]: Transport: Searching for Passenger trips {1} with allowed distance {2}...".format(self.public_key,
+                                                                                                        self.data[
+                                                                                                            'location'].latitude,
+                                                                                                        self.distance_allowed_area))
+        query = Query(
+            [Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area)),
+             Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area))])
         self.search_services(0, query)
 
-
     def search_passengers(self):
-        print("[{0}]: Transport: Searching for Passenger trips {1} with allowed distance {2}...".format(self.public_key, self.data['location'].latitude, self.distance_allowed_area))
+        print("[{0}]: Transport: Searching for Passenger trips {1} with allowed distance {2}...".format(self.public_key,
+                                                                                                        self.data[
+                                                                                                            'location'].latitude,
+                                                                                                        self.distance_allowed_area))
         query = Query([
             # Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Eq(self.data['location'])),
-                                  # Distance(self.data['location'], self.distance_allowed_area)),
-                       # Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Eq(self.data['location'])),
-                                  # Distance(self.data['location'], self.distance_allowed_area)),
-                       ])
+            # Distance(self.data['location'], self.distance_allowed_area)),
+            # Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Eq(self.data['location'])),
+            # Distance(self.data['location'], self.distance_allowed_area)),
+        ])
         # query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area)),
         #                Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area))])
         self.search_services(0, query)
@@ -90,15 +96,10 @@ class TransportAgent(OEFAgent):
         # decentralized_trip_contract
         contract = {"contract": "data"}
 
-
-
-
         time.sleep(20)
         self.data['state'] = 'WAIT'
         # schedule.clear('driving-jobs')
         print("[{0}]: Transport: Trip finished.".format(self.public_key))
-
-
 
         # Sending contract
         encoded_data = json.dumps(contract).encode("utf-8")
@@ -129,6 +130,9 @@ def add_transport_agent(data):
     pub_key = str(randint(1, 1e9)).replace('0', 'A').replace('1', 'B')
     agent = TransportAgent(data, pub_key, oef_addr="127.0.0.1", oef_port=10000)
     agent.connect()
+    print('register trip req with coordinates {} {}'.format(
+        agent.transport_description.data_model['from_location']['latitude'],
+        agent.transport_description.data_model['to_location']['latitude']))
     agent.register_service(randint(1, 1e9), agent.transport_description)
 
     print("[{}]: Transport: Searching for Passenger trips...".format(agent.public_key))

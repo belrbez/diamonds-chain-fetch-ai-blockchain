@@ -2,6 +2,7 @@ import json
 from typing import List
 from random import randint
 
+import asyncio
 from fetchai.ledger.crypto import Entity, Address
 from threading import Thread
 from oef.agents import OEFAgent
@@ -100,6 +101,8 @@ class TransportAgent(OEFAgent):
 
 
 def cron(delay, interval, agent):
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
     time.sleep(delay)
     while 1:
         agent.search_drivers()
@@ -113,7 +116,7 @@ def add_transport_agent(data):
     agent.register_service(randint(1, 1e9), agent.transport_description)
 
     print("[{}]: Transport: PreLaunching new transport agent...".format(agent.public_key))
-    Thread(target=cron(5, 1, agent)).start()
+    Thread(target=cron(5, 2, agent)).start()
     print("[{}]: Transport: Launching new transport agent...".format(agent.public_key))
 
     try:

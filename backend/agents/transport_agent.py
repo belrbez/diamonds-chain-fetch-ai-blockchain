@@ -3,6 +3,7 @@ from typing import List
 from random import randint
 
 from fetchai.ledger.crypto import Entity, Address
+from threading import Thread
 from oef.agents import OEFAgent
 from oef.query import Query, Constraint, Eq, Distance
 from oef.schema import Description, Location
@@ -112,7 +113,7 @@ def add_transport_agent(data):
     agent.register_service(randint(1, 1e9), agent.transport_description)
 
     print("[{}]: Transport: PreLaunching new transport agent...".format(agent.public_key))
-    cron(5, 1, agent)
+    Thread(target=cron(5, 1, agent))
     print("[{}]: Transport: Launching new transport agent...".format(agent.public_key))
 
     try:

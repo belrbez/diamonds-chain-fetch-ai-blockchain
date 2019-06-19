@@ -34,8 +34,10 @@ class TransportAgent(OEFAgent):
         print("[{0}]: Transport: Searching for Passenger trips {1} with allowed distance {2}..."
               .format(self.public_key, self.data['location_latitude'], self.distance_allowed_area))
         query = Query(
-            [Constraint(TRIP_DATAMODEL.FROM_LOCATION_LONGITUDE.name, GtEq(self.data['location_longitude'])),
-             Constraint(TRIP_DATAMODEL.TO_LOCATION_LONGITUDE.name, LtEq(self.data['location_longitude']))])
+            [Constraint(TRIP_DATAMODEL.FROM_LOCATION_LONGITUDE.name,
+                        GtEq(self.data['location_longitude'] - self.distance_allowed_area)),
+             Constraint(TRIP_DATAMODEL.FROM_LOCATION_LONGITUDE.name,
+                        LtEq(self.data['location_longitude'] + self.distance_allowed_area))])
         self.search_services(0, query)
 
     def search_passengers(self):

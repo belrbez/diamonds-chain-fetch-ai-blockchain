@@ -1,12 +1,14 @@
 import json
-from typing import List
+import sched
+import time
 from random import randint
+from typing import List
 
 from fetchai.ledger.crypto import Entity, Address
 from oef.agents import OEFAgent
 from oef.query import Query, Constraint, Eq, Distance
 from oef.schema import Description, Location
-import sched, time
+
 from agents.transport_schema import TRANSPORT_DATAMODEL
 from agents.trip_schema import TRIP_DATAMODEL
 
@@ -34,9 +36,6 @@ class TransportAgent(OEFAgent):
                        Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area)),
                        Constraint(TRIP_DATAMODEL.CAN_BE_DRIVER.name, Eq(True))])
         self.search_services(0, query)
-        s = sched.scheduler(time.time, time.sleep)
-        ev = s.enter(1000, 1, self.search_drivers())
-        s.run(False)
 
     def search_passengers(self):
         print("[{}]: Transport: Searching for Passenger and Drivers trips...".format(self.public_key))
@@ -51,11 +50,17 @@ class TransportAgent(OEFAgent):
 
     def on_search_result(self, search_id: int, agents: List[str]):
         if self.data['state'] == 'DRIVE':
+            s = sched.scheduler(time.time, time.sleep)
+            ev = s.enter(10000, 1, self.search_drivers())
+            s.run(False)
             return
 
         # """For every agent returned in the service search, send a CFP to obtain resources from them."""
         if len(agents) == 0:
             print("[{}]: Transport: No trips found. Waiting for next loop...".format(self.public_key))
+            s = sched.scheduler(time.time, time.sleep)
+            ev = s.enter(10000, 1, self.search_drivers())
+            s.run(False)
             return
 
         print("[{0}]: Transport: Trips found: {1}".format(self.public_key, agents))
@@ -68,6 +73,9 @@ class TransportAgent(OEFAgent):
             })
             print("[{0}]: Transport: Sending propose with location: {1}".format(self.public_key, self.data['location']))
             self.send_propose(1, 0, agent, 0, [proposal])
+        s = sched.scheduler(time.time, time.sleep)
+        ev = s.enter(10000, 1, self.search_drivers())
+        s.run(False)
 
     def on_accept(self, msg_id: int, dialogue_id: int, origin: str, target: int):
         """Once we received an Accept, send the requested data."""
@@ -107,7 +115,7 @@ def add_transport_agent(data):
 
     print("[{}]: Transport: PreLaunching new transport agent...".format(agent.public_key))
     s = sched.scheduler(time.time, time.sleep)
-    ev = s.enter(1000, 1, agent.search_drivers())
+    ev = s.enter(10000, 1, agent.search_drivers())
     s.run(False)
     print("[{}]: Transport: Launching new transport agent...".format(agent.public_key))
 

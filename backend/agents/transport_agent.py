@@ -1,13 +1,14 @@
 import json
-from typing import List
+import sched
+import time
 from random import randint
+from typing import List
 
 from fetchai.ledger.crypto import Entity, Address
-from threading import Thread
 from oef.agents import OEFAgent
 from oef.query import Query, Constraint, Eq, Distance
 from oef.schema import Description, Location
-import sched, time
+
 from agents.transport_schema import TRANSPORT_DATAMODEL
 from agents.trip_schema import TRIP_DATAMODEL
 
@@ -28,20 +29,19 @@ class TransportAgent(OEFAgent):
         }
         self.transport_description = Description(self.data, TRANSPORT_DATAMODEL())
         self.distance_allowed_area = 20.0
+        self.search_drivers()
 
     def search_drivers(self):
         print("[{}]: Transport: Searching for Passenger trips...".format(self.public_key))
-        query = Query(
-            [Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area)),
-             Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area)),
-             Constraint(TRIP_DATAMODEL.CAN_BE_DRIVER.name, Eq(True))])
+        query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area)),
+                       Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area)),
+                       Constraint(TRIP_DATAMODEL.CAN_BE_DRIVER.name, Eq(True))])
         self.search_services(0, query)
 
     def search_passengers(self):
         print("[{}]: Transport: Searching for Passenger and Drivers trips...".format(self.public_key))
-        query = Query(
-            [Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area)),
-             Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area))])
+        query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area)),
+                       Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area))])
         self.search_services(0, query)
 
     def update_location(self):
@@ -56,6 +56,7 @@ class TransportAgent(OEFAgent):
         # """For every agent returned in the service search, send a CFP to obtain resources from them."""
         if len(agents) == 0:
             print("[{}]: Transport: No trips found. Waiting for next loop...".format(self.public_key))
+            self.search_drivers()
             return
 
         print("[{0}]: Transport: Trips found: {1}".format(self.public_key, agents))
@@ -82,6 +83,17 @@ class TransportAgent(OEFAgent):
         # decentralized_trip_contract
         contract = {"contract": "data"}
 
+
+
+
+        time.sleep(20)
+        self.data['state'] = 'WAIT'
+        # schedule.clear('driving-jobs')
+        print("[{0}]: Transport: Trip finished.".format(self.public_key))
+        self.search_drivers()
+
+
+
         # Sending contract
         encoded_data = json.dumps(contract).encode("utf-8")
         print("[{0}]: Transport: Sending contract to {1}".format(self.public_key, origin))
@@ -97,13 +109,7 @@ class TransportAgent(OEFAgent):
         self.data['state'] = 'WAIT'
         # schedule.clear('driving-jobs')
         print("[{0}]: Transport: Trip finished.".format(self.public_key))
-
-
-def cron(delay, interval, agent):
-    time.sleep(delay)
-    while 1:
-        agent.search_drivers()
-        time.sleep(interval)
+        self.search_drivers()
 
 
 def add_transport_agent(data):
@@ -112,8 +118,6 @@ def add_transport_agent(data):
     agent.connect()
     agent.register_service(randint(1, 1e9), agent.transport_description)
 
-    print("[{}]: Transport: PreLaunching new transport agent...".format(agent.public_key))
-    Thread(target=cron(5, 1, agent)).start()
     print("[{}]: Transport: Launching new transport agent...".format(agent.public_key))
 
     try:

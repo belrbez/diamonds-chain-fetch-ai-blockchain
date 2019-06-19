@@ -102,10 +102,11 @@ def add_transport_agent(data):
     agent.connect()
     agent.register_service(randint(1, 1e9), agent.transport_description)
 
-    print("[{}]: Transport: Launching new transport agent...".format(agent.public_key))
+    print("[{}]: Transport: PreLaunching new transport agent...".format(agent.public_key))
     s = sched.scheduler(time.time, time.sleep)
     ev = s.enter(10, 1, agent.search_drivers)
     s.run(False)
+    print("[{}]: Transport: Launching new transport agent...".format(agent.public_key))
 
     try:
         agent.run()

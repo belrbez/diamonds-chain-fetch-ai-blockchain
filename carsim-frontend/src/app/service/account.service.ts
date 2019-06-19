@@ -34,7 +34,7 @@ export class AccountService {
 
   public drive(account: Account, pick: any): Observable<string> {
     return this.http.post<string>('trips', {
-      id: account.id,
+      account_id: account.id,
       name: account.name,
       start: {
         longitude: pick.longitudeFrom,
@@ -44,7 +44,7 @@ export class AccountService {
         longitude: pick.longitudeTo,
         latitude: pick.latitudeTo
       },
-      canBeDriver: account.canBeDriver
+      can_be_driver: account.canBeDriver
     })
   }
 

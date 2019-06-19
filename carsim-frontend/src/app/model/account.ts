@@ -6,4 +6,5 @@ export class Account {
   start?: Coordinate;
   end?: Coordinate;
   canBeDriver: boolean;
+  tripId: string;
 }

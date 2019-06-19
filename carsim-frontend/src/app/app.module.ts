@@ -9,11 +9,15 @@ import {MatButtonModule, MatIconModule, MatInputModule, MatToolbarModule} from '
 import {FormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientModule} from '@angular/common/http';
+import { TripComponent } from './map/trip/trip.component';
+import { NewTripComponent } from './map/new-trip/new-trip.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MapComponent
+    MapComponent,
+    TripComponent,
+    NewTripComponent
   ],
   imports: [
     BrowserModule,

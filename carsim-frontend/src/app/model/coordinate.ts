@@ -1,4 +1,4 @@
 export class Coordinate {
-  logitude: number;
+  longitude: number;
   latitude: number;
 }

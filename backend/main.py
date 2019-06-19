@@ -44,7 +44,7 @@ def add_journey_request():
 def get_journey_request(trip_id: str):
     if trip_id not in trips:
         flask.abort(404)
-    data = trips[trip_id]
+    data = dict(trips[trip_id])
     data['from_location'] = {
         'longitude': data['from_location'].longitude,
         'latitude': data['from_location'].latitude

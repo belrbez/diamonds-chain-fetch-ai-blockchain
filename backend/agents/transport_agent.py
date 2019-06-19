@@ -30,15 +30,15 @@ class TransportAgent(OEFAgent):
 
     def search_drivers(self):
         print("[{}]: Transport: Searching for Passenger trips...".format(self.public_key))
-        query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['position'], self.distance_allowed_area)),
-                       Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['position'], self.distance_allowed_area)),
+        query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area)),
+                       Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area)),
                        Constraint(TRIP_DATAMODEL.CAN_BE_DRIVER.name, Eq(True))])
         self.search_services(0, query)
 
     def search_passengers(self):
         print("[{}]: Transport: Searching for Passenger and Drivers trips...".format(self.public_key))
-        query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['position'], self.distance_allowed_area)),
-                       Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['position'], self.distance_allowed_area))])
+        query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area)),
+                       Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area))])
         self.search_services(0, query)
 
     def update_location(self):

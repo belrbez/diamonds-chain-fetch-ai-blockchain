@@ -6,7 +6,7 @@ from random import randint
 from oef.agents import OEFAgent
 from oef.messages import CFP_TYPES
 from oef.proxy import PROPOSE_TYPES
-from oef.schema import Description
+from oef.schema import Description, Location
 
 import time
 from agents.trip_schema import TRIP_DATAMODEL
@@ -36,9 +36,13 @@ class TripAgent(OEFAgent):
     def on_propose(self, msg_id: int, dialogue_id: int, origin: str, target: int, proposals: PROPOSE_TYPES):
         """When we receive a Propose message, answer with an Accept."""
         print("[{0}]: Trip: Received propose from agent {1}".format(self.public_key, origin))
-        for i, p in enumerate(proposals):
-            print("[{0}]: Trip: Proposal {1}: {2}".format(self.public_key, i, p.values))
-            # if p.values["price_per_km"] <
+        pos_loc: Location = self.data['position']
+        # if pos_loc.distance(proposals['location']) > self.data['distance_area']:
+        #     print("[{0}]: Trip: Proposal with location rejected {1}: {2}".format(self.public_key, proposals["location"]))
+        #     return
+        # for i, p in enumerate(proposals):
+        #     if p.values['location']:
+        # TODO: check if proposals['location'] is near trip
         print("[{0}]: Trip: Accepting Propose.".format(self.public_key))
         self.send_accept(msg_id, dialogue_id, origin, msg_id + 1)
 
@@ -46,9 +50,10 @@ class TripAgent(OEFAgent):
         """Extract and print data from incoming (simple) messages."""
 
         # PLACE HOLDER TO SIGN AND SUBMIT TRANSACTION
-        transaction = json.loads(content.decode("utf-8"))
+
         print("[{0}]: Trip: Received contract from {1}".format(self.public_key, origin))
-        print("Trip: READY TO SUBMIT: ", transaction)
+        transaction = json.loads(content.decode("utf-8"))
+        print("[{0}]: Trip: READY TO SUBMIT transaction: {1}".format(self.public_key, transaction))
 
         self.stop()
 

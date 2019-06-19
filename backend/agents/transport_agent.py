@@ -31,18 +31,20 @@ class TransportAgent(OEFAgent):
 
     def search_drivers(self):
         print("[{0}]: Transport: Searching for Passenger trips {1} with allowed distance {2}...".format(self.public_key, self.data['location'].latitude, self.distance_allowed_area))
-        query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Eq(self.data['location'])),
+        query = Query([
+            # Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Eq(self.data['location'])),
                                   # Distance(self.data['location'], self.distance_allowed_area)),
-                       Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Eq(self.data['location'])),
+                       # Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Eq(self.data['location'])),
                                   # Distance(self.data['location'], self.distance_allowed_area)),
                        Constraint(TRIP_DATAMODEL.CAN_BE_DRIVER.name, Eq(True))])
         self.search_services(0, query)
 
     def search_passengers(self):
         print("[{0}]: Transport: Searching for Passenger trips {1} with allowed distance {2}...".format(self.public_key, self.data['location'].latitude, self.distance_allowed_area))
-        query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Eq(self.data['location'])),
+        query = Query([
+            # Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Eq(self.data['location'])),
                                   # Distance(self.data['location'], self.distance_allowed_area)),
-                       Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Eq(self.data['location'])),
+                       # Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Eq(self.data['location'])),
                                   # Distance(self.data['location'], self.distance_allowed_area)),
                        ])
         # query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area)),

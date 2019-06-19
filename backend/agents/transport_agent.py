@@ -31,21 +31,19 @@ class TransportAgent(OEFAgent):
 
     def search_drivers(self):
         print("[{}]: Transport: Searching for Passenger trips...".format(self.public_key))
-        query = Query(
-            [Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['position'], self.distance_allowed_area)),
-             Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['position'], self.distance_allowed_area)),
-             Constraint(TRIP_DATAMODEL.CAN_BE_DRIVER.name, Eq(True))])
+        query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area)),
+                       Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area)),
+                       Constraint(TRIP_DATAMODEL.CAN_BE_DRIVER.name, Eq(True))])
         self.search_services(0, query)
 
     def search_passengers(self):
         print("[{}]: Transport: Searching for Passenger and Drivers trips...".format(self.public_key))
-        query = Query(
-            [Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['position'], self.distance_allowed_area)),
-             Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['position'], self.distance_allowed_area))])
+        query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area)),
+                       Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area))])
         self.search_services(0, query)
 
     def update_location(self):
-        cur_location: Location = self.data['location']
+        cur_location : Location = self.data['location']
         # cur_location.distance()
         print("[{0}]: Transport: Driving {1}...".format(self.public_key, cur_location))
 
@@ -56,7 +54,6 @@ class TransportAgent(OEFAgent):
         # """For every agent returned in the service search, send a CFP to obtain resources from them."""
         if len(agents) == 0:
             print("[{}]: Transport: No trips found. Waiting for next loop...".format(self.public_key))
-            time.sleep(3)
             return
 
         print("[{0}]: Transport: Trips found: {1}".format(self.public_key, agents))

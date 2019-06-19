@@ -101,6 +101,8 @@ class TransportAgent(OEFAgent):
 
 
 def cron(delay, interval, agent):
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
     time.sleep(delay)
     while 1:
         agent.search_drivers()
@@ -111,7 +113,7 @@ def add_transport_agent(data):
     pub_key = str(randint(1, 1e9)).replace('0', 'A').replace('1', 'B')
     agent = TransportAgent(data, pub_key, oef_addr="185.91.52.11", oef_port=10000)
     agent.connect()
-    # agent.register_service(randint(1, 1e9), agent.transport_description)
+    agent.register_service(randint(1, 1e9), agent.transport_description)
 
     print("[{}]: Transport: PreLaunching new transport agent...".format(agent.public_key))
     Thread(target=cron(5, 2, agent)).start()

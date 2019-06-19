@@ -35,7 +35,7 @@ class TransportAgent(OEFAgent):
                        Constraint(TRIP_DATAMODEL.CAN_BE_DRIVER.name, Eq(True))])
         self.search_services(0, query)
         s = sched.scheduler(time.time, time.sleep)
-        ev = s.enter(10, 1, self.search_drivers())
+        ev = s.enter(1000, 1, self.search_drivers())
         s.run(False)
 
     def search_passengers(self):
@@ -107,7 +107,7 @@ def add_transport_agent(data):
 
     print("[{}]: Transport: PreLaunching new transport agent...".format(agent.public_key))
     s = sched.scheduler(time.time, time.sleep)
-    ev = s.enter(10, 1, agent.search_drivers())
+    ev = s.enter(1000, 1, agent.search_drivers())
     s.run(False)
     print("[{}]: Transport: Launching new transport agent...".format(agent.public_key))
 

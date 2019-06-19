@@ -6,6 +6,7 @@ from typing import List
 import asyncio
 from threading import Thread
 from fetchai.ledger.crypto import Entity, Address
+from fetchai.ledger.api import LedgerApi
 from oef.agents import OEFAgent
 from oef.query import Query, Constraint, Eq, Distance, GtEq, LtEq
 from oef.schema import Description, Location
@@ -32,6 +33,7 @@ class TransportAgent(OEFAgent):
         self.transport_description = Description(self.data, TRANSPORT_DATAMODEL())
         self.distance_allowed_area = 5
         self.velocity = 0.1
+        # self.contract = data['rent_contract']
 
     def search_drivers(self):
         print("[{0}]: Transport: Searching for Passenger trips {1} with allowed distance {2}..."
@@ -175,12 +177,11 @@ class TransportAgent(OEFAgent):
         # Preparing contract
         # PLACE HOLDER TO PREPARE AND SIGN TRANSACTION
         # decentralized_trip_contract
-        contract = {'type': 'contract', "contract": "data"}
-
-        # schedule.clear('driving-jobs')
-
         # Sending contract
+        # encoded_data = json.dumps(self.contract).encode("utf-8")
+        contract = {'type': 'contract', "contract": "data"}
         encoded_data = json.dumps(contract).encode("utf-8")
+
         print("[{0}]: Transport: Sending contract to {1}".format(self.public_key, origin))
         self.send_message(0, dialogue_id, origin, encoded_data)
         self.request_agent_location(origin)

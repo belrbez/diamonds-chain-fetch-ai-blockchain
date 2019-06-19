@@ -105,10 +105,10 @@ class TransportAgent(OEFAgent):
 
     def update_transport_location(self, origin, source_loc: Location, target_loc: Location, loop):
         asyncio.set_event_loop(loop)
-        self.drive_to_point(origin, source_loc)
-        self.drive_to_point(origin, target_loc)
+        self.drive_to_point(origin, source_loc, 'Picked up account')
+        self.drive_to_point(origin, target_loc, 'Trip finished')
 
-    def drive_to_point(self, origin, target_point: Location):
+    def drive_to_point(self, origin, target_point: Location, point_descr):
         cur_loc = Location(self.data['location_latitude'], self.data['location_longitude'])
         x_diff = target_point.latitude - cur_loc.latitude
         y_diff = target_point.longitude - cur_loc.longitude
@@ -133,7 +133,7 @@ class TransportAgent(OEFAgent):
         self.send_transp_loc(origin, cur_loc)
         self.data['location_latitude'] = cur_loc.latitude
         self.data['location_longitude'] = cur_loc.longitude
-        print("[{0}]: Transport: Trip finished.".format(self.public_key))
+        print("[{0}]: Transport: {}.".format(self.public_key, point_descr))
 
 
 

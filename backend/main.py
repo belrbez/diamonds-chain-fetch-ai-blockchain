@@ -44,7 +44,20 @@ def add_journey_request():
 def get_journey_request(trip_id: str):
     if trip_id not in trips:
         flask.abort(404)
-    return to_json(trips[trip_id])
+    data = trips[trip_id]
+    data['from_location'] = {
+        'longitude': data['from_location'].longitude,
+        'latitude': data['from_latitude'].latitude
+    }
+    data['to_location'] = {
+        'longitude': data['to_location'].longitude,
+        'latitude': data['to_latitude'].latitude
+    }
+    data['position'] = {
+        'longitude': data['position'].longitude,
+        'latitude': data['position'].latitude
+    }
+    return to_json(data)
 
 
 def add_transport_agent_to_oef():

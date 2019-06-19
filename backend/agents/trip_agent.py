@@ -33,6 +33,7 @@ class TripAgent(OEFAgent):
         self.trip_description = Description(self.data, TRIP_DATAMODEL())
         self.data['state'] = 'free'
         self.data['position'] = Location(self.data['from_location_latitude'], self.data['from_location_longitude'])
+        self.data['transp_location'] = None
         self.possible_trips = []
         # self.contract = data['rent_contract']
 
@@ -99,12 +100,15 @@ class TripAgent(OEFAgent):
         if msg['type'] == 'location':
             if msg['status'] == 'Trip started':
                 self.data['position'] = Location(msg['location_latitude'], msg['location_longitude'])
+                self.data['transp_location'] = {'latitude': msg['location_latitude'], 'longitude': msg['longitude']}
+
                 print('Agent change location', msg)
 
                 print('Account upd location to {} {}'.format(self.data['position'].latitude,
                                                              self.data['position'].longitude))
             else:
                 print('Transport change location', msg)
+                self.data['transp_location'] = {'latitude': msg['location_latitude'], 'longitude': msg['longitude']}
 
             return
 

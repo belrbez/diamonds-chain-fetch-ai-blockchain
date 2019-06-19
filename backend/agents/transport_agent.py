@@ -133,6 +133,8 @@ class TransportAgent(OEFAgent):
         self.send_transp_loc(origin, cur_loc)
         self.data['location_latitude'] = cur_loc.latitude
         self.data['location_longitude'] = cur_loc.longitude
+        print("[{0}]: Transport: Trip finished.".format(self.public_key))
+
 
 
     def send_transp_loc(self, origin, loc):
@@ -159,7 +161,6 @@ class TransportAgent(OEFAgent):
 
         self.data['state'] = 'WAIT'
         # schedule.clear('driving-jobs')
-        print("[{0}]: Transport: Trip finished.".format(self.public_key))
 
         # Sending contract
         encoded_data = json.dumps(contract).encode("utf-8")

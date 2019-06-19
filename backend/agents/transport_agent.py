@@ -29,7 +29,6 @@ class TransportAgent(OEFAgent):
         }
         self.transport_description = Description(self.data, TRANSPORT_DATAMODEL())
         self.distance_allowed_area = 20.0
-        self.search_drivers()
 
     def search_drivers(self):
         print("[{}]: Transport: Searching for Passenger trips...".format(self.public_key))
@@ -109,6 +108,10 @@ class TransportAgent(OEFAgent):
         self.data['state'] = 'WAIT'
         # schedule.clear('driving-jobs')
         print("[{0}]: Transport: Trip finished.".format(self.public_key))
+        self.search_drivers()
+
+    def run(self) -> None:
+        self._loop.run_until_complete(self.async_run())
         self.search_drivers()
 
 

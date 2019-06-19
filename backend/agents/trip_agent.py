@@ -64,7 +64,7 @@ def add_trip_agent(data):
     agent.connect()
     msg_id = randint(1, 1e9)
     agent.register_service(msg_id, agent.trip_description)
-    print('Add agent Trip: ', data['name'], str(data['from_location'].latitude))
+    print('Add agent Trip: ', data['name'], str(agent.trip_description.values.get('from_location').latitude))
 
     try:
         print("[{0}]: Trip: request for a trip sent.".format(agent.public_key))

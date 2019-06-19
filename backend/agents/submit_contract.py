@@ -11,7 +11,7 @@ def call(name: str)-> SmartContract:
     address1 = Address(provider1)
 
     # Setting API up
-    api = LedgerApi('127.0.0.1', 8100)
+    api = LedgerApi('185.91.52.11', 10002)
 
     # Need funds to deploy contract
     api.sync(api.tokens.wealth(provider1, 59000000))
@@ -28,7 +28,7 @@ def call(name: str)-> SmartContract:
     time.sleep(5)
 
     # Printing balance of the creating address1
-    print(contract.query(api, 'getAccountRides', "1"))
+    print(contract.query(api, 'getAccountRides', acc_id = "1"))
 
 def main():
     call("./full_contract.etch")

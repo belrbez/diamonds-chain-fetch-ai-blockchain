@@ -2,11 +2,12 @@ import json
 from typing import List
 from random import randint
 
+import schedule
 from fetchai.ledger.crypto import Entity, Address
 from oef.agents import OEFAgent
 from oef.query import Query, Constraint, Eq, Distance
 from oef.schema import Description, Location
-import sched, time
+import time
 from agents.transport_schema import TRANSPORT_DATAMODEL
 from agents.trip_schema import TRIP_DATAMODEL
 
@@ -53,7 +54,6 @@ class TransportAgent(OEFAgent):
         # """For every agent returned in the service search, send a CFP to obtain resources from them."""
         if len(agents) == 0:
             print("[{}]: Transport: No trips found. Waiting for next loop...".format(self.public_key))
-            time.sleep(3)
             return
 
         print("[{0}]: Transport: Trips found: {1}".format(self.public_key, agents))
@@ -103,9 +103,7 @@ def add_transport_agent(data):
     agent.register_service(randint(1, 1e9), agent.transport_description)
 
     print("[{}]: Transport: PreLaunching new transport agent...".format(agent.public_key))
-    s = sched.scheduler(time.time, time.sleep)
-    ev = s.enter(10, 1, agent.search_drivers())
-    s.run(False)
+    schedule.every(10).seconds.do(agent.search_drivers())
     print("[{}]: Transport: Launching new transport agent...".format(agent.public_key))
 
     try:

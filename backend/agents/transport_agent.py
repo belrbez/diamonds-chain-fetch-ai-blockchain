@@ -99,16 +99,17 @@ class TransportAgent(OEFAgent):
         data = json.loads(content.decode('utf-8'))
         if 'type' in data and data['type'] == 'location':
             new_loop = asyncio.new_event_loop()
+            print('Transport: get msg from origin {}'.format(origin))
             Thread(target=self.update_transport_location,
                    args=(origin, Location(data['from_location_latitude'], data['from_location_longitude']),
                          Location(data['to_location_latitude'], data['to_location_longitude']), new_loop)).start()
 
     def update_transport_location(self, origin, source_loc: Location, target_loc: Location, loop):
         asyncio.set_event_loop(loop)
-        self.drive_to_point(origin, source_loc, 'Picked up account')
-        self.drive_to_point(origin, target_loc, 'Trip finished')
+        self.drive_to_point(origin, source_loc, 'Getting to trip')
+        self.drive_to_point(origin, target_loc, 'Trip started')
 
-    def drive_to_point(self, origin, target_point: Location, point_descr):
+    def drive_to_point(self, origin, target_point: Location, transp_status):
         cur_loc = Location(self.data['location_latitude'], self.data['location_longitude'])
         x_diff = target_point.latitude - cur_loc.latitude
         y_diff = target_point.longitude - cur_loc.longitude
@@ -122,28 +123,29 @@ class TransportAgent(OEFAgent):
         y_diff_sign = -1 if y_diff < 0 else 1
 
         time.sleep(1)
+
         while abs(cur_loc.latitude - target_point.latitude) >= abs(x_velocity) and \
                 abs(cur_loc.longitude - target_point.longitude) >= abs(y_velocity):
             cur_loc = Location(cur_loc.latitude + x_velocity * x_diff_sign,
                                cur_loc.longitude + y_velocity * y_diff_sign)
             print('Update location of transport to {} {}'.format(cur_loc.latitude, cur_loc.longitude))
-            self.send_transp_loc(origin, cur_loc)
+            self.send_transp_loc(origin, cur_loc, transp_status)
             time.sleep(1)
         cur_loc = target_point
-        self.send_transp_loc(origin, cur_loc)
+        self.send_transp_loc(origin, cur_loc, transp_status)
         self.data['location_latitude'] = cur_loc.latitude
         self.data['location_longitude'] = cur_loc.longitude
-        print("[{0}]: Transport: {1}.".format(self.public_key, point_descr))
+        descr = 'Picked up account' if transp_status == 'Getting to trip' else 'Trip finished'
+        print("[{0}]: Transport: {1}.".format(self.public_key, descr))
 
-
-
-    def send_transp_loc(self, origin, loc):
+    def send_transp_loc(self, origin, loc, status):
         msg_id = randint(1, 1e9)
         d_id = randint(1, 1e9)
         self.send_message(msg_id, d_id, origin, json.dumps({
             'location_latitude': loc.latitude,
             'location_longitude': loc.longitude,
-            'type': 'location'
+            'type': 'location',
+            'status': status
         }).encode('utf-8'))
 
     def on_accept(self, msg_id: int, dialogue_id: int, origin: str, target: int):

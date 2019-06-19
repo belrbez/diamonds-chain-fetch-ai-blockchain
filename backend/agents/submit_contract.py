@@ -11,7 +11,7 @@ def call(name: str)-> SmartContract:
     address1 = Address(provider1)
 
     # Setting API up
-    api = LedgerApi('127.0.0.1', 8100)
+    api = LedgerApi('185.91.52.11', 1002)
 
     # Need funds to deploy contract
     api.sync(api.tokens.wealth(provider1, 59000000))

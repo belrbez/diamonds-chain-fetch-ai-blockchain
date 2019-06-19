@@ -23,7 +23,7 @@ def to_json(data):
 def add_agent_to_oef(data):
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
-    add_trip_agent(data)
+    add_trip_agent(data, trips)
 
 
 @app.route("/trips", methods=['POST'])
@@ -36,7 +36,6 @@ def add_journey_request():
     data['distance_area'] = uniform(0, 2)
     data['position'] = data['from_location']
     Thread(target=add_agent_to_oef, args=(data,)).start()
-    trips[data['trip_id']] = data
     return to_json({"trip_id": data['trip_id']})
 
 

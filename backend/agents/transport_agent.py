@@ -1,5 +1,6 @@
 import json
 import sched
+import threading
 import time
 from random import randint
 from typing import List
@@ -112,7 +113,7 @@ class TransportAgent(OEFAgent):
 
     def run(self) -> None:
         self._loop.run_until_complete(self.async_run())
-        self.search_drivers()
+        threading.Timer(10.0, self.search_drivers).start()
 
 
 def add_transport_agent(data):

@@ -30,14 +30,14 @@ class TransportAgent(OEFAgent):
         self.distance_allowed_area = 20000.0
 
     def search_drivers(self):
-        print("[{0}]: Transport: Searching for Passenger trips {1}...".format(self.public_key, self.distance_allowed_area))
+        print("[{0}]: Transport: Searching for Passenger trips {1} with allowed distance {2}...".format(self.public_key, self.data['location'], self.distance_allowed_area))
         query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area)),
                        Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area)),
                        Constraint(TRIP_DATAMODEL.CAN_BE_DRIVER.name, Eq(True))])
         self.search_services(0, query)
 
     def search_passengers(self):
-        print("[{0}]: Transport: Searching for Passenger and Drivers trips {1}...".format(self.public_key, self.distance_allowed_area))
+        print("[{0}]: Transport: Searching for Passenger trips {1} with allowed distance {2}...".format(self.public_key, self.data['location'], self.distance_allowed_area))
         query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area)),
                        Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area))])
         self.search_services(0, query)
@@ -49,6 +49,8 @@ class TransportAgent(OEFAgent):
 
     def on_search_result(self, search_id: int, agents: List[str]):
         if self.data['state'] == 'DRIVE':
+            print("[{0}]: Transport: State is driving, no need to search driver...".format(
+                self.public_key))
             return
 
         # """For every agent returned in the service search, send a CFP to obtain resources from them."""

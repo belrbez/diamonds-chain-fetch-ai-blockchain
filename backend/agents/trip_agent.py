@@ -60,12 +60,12 @@ class TripAgent(OEFAgent):
 
 def add_trip_agent(data):
     # create and connect the agent
-    print('Add agent: ' + data['name'])
     pub_key = str(randint(1, 1e9)).replace('0', 'A').replace('1', 'B')
     agent = TripAgent(data, pub_key, oef_addr="127.0.0.1", oef_port=10000)
     agent.connect()
     msg_id = randint(1, 1e9)
     agent.register_service(msg_id, agent.trip_description)
+    print('Add agent: ' + data['name'] + str(agent.trip_description))
 
     try:
         print("[{0}]: Trip: request for a trip sent.".format(agent.public_key))

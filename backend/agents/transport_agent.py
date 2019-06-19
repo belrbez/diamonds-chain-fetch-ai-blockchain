@@ -1,3 +1,4 @@
+import functools
 import json
 from typing import List
 from random import randint
@@ -29,6 +30,7 @@ class TransportAgent(OEFAgent):
         self.transport_description = Description(self.data, TRANSPORT_DATAMODEL())
         self.distance_allowed_area = 20.0
 
+    @with_logging
     def search_drivers(self):
         print("[{}]: Transport: Searching for Passenger trips...".format(self.public_key))
         query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area)),
@@ -96,6 +98,16 @@ class TransportAgent(OEFAgent):
         # schedule.clear('driving-jobs')
         print("[{0}]: Transport: Trip finished.".format(self.public_key))
 
+def with_logging(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        print('LOG: Running job "%s"' % func.__name__)
+        result = func(*args, **kwargs)
+        print('LOG: Job "%s" completed' % func.__name__)
+        return result
+    return wrapper
+
+
 def add_transport_agent(data):
     pub_key = str(randint(1, 1e9)).replace('0', 'A').replace('1', 'B')
     agent = TransportAgent(data, pub_key, oef_addr="185.91.52.11", oef_port=10000)
@@ -103,7 +115,7 @@ def add_transport_agent(data):
     agent.register_service(randint(1, 1e9), agent.transport_description)
 
     print("[{}]: Transport: PreLaunching new transport agent...".format(agent.public_key))
-    schedule.every(10).seconds.do(agent.search_drivers())
+    schedule.every(10).seconds.do(agent.search_drivers)
     print("[{}]: Transport: Launching new transport agent...".format(agent.public_key))
 
     try:

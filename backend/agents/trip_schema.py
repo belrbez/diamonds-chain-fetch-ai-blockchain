@@ -18,22 +18,22 @@ class TRIP_DATAMODEL(DataModel):
                               attribute_description="Person ID.")
 
     FROM_LOCATION_LATITUDE = AttributeSchema("from_location_latitude",
-                                             Location,
+                                             float,
                                              is_attribute_required=True,
                                              attribute_description="Latitude of FROM point.")
 
     FROM_LOCATION_LONGITUDE = AttributeSchema("from_location_longitude",
-                                              Location,
+                                              float,
                                               is_attribute_required=True,
                                               attribute_description="Longitude of FROM point.")
 
     TO_LOCATION_LATITUDE = AttributeSchema("to_location_latitude",
-                                           Location,
+                                           float,
                                            is_attribute_required=True,
                                            attribute_description="Latitude of TO point.")
 
     TO_LOCATION_LONGITUDE = AttributeSchema("to_location_longitude",
-                                            Location,
+                                            float,
                                             is_attribute_required=True,
                                             attribute_description="Longitude of TO point.")
 

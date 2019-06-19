@@ -128,7 +128,7 @@ class TransportAgent(OEFAgent):
             'location_latitude': loc.latitude,
             'location_longitude': loc.longitude,
             'type': 'location'
-        }))
+        }).encode('utf-8'))
 
     def on_accept(self, msg_id: int, dialogue_id: int, origin: str, target: int):
         """Once we received an Accept, send the requested data."""

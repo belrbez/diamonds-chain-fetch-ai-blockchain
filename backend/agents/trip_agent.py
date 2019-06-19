@@ -23,10 +23,10 @@ class TripAgent(OEFAgent):
             "account_id": data['account_id'],
             "can_be_driver": data['can_be_driver'],
             "trip_id": data['trip_id'],
-            "from_location_latitude": float(data['from_location']['latitude']),
-            "from_location_longitude": float(data['from_location']['longitude']),
-            "to_location_latitude": float(data['to_location']['latitude']),
-            "to_location_longitude": float(data['to_location']['longitude']),
+            "from_location_latitude": float(data['from_location'].latitude),
+            "from_location_longitude": float(data['from_location'].longitude),
+            "to_location_latitude": float(data['to_location'].latitude),
+            "to_location_longitude": float(data['to_location'].longitude),
             "distance_area": data['distance_area'],
         }
         self.trip_description = Description(self.data, TRIP_DATAMODEL())
@@ -76,7 +76,7 @@ class TripAgent(OEFAgent):
 def add_trip_agent(data):
     # create and connect the agent
     pub_key = str(randint(1, 1e9)).replace('0', 'A').replace('1', 'B')
-    agent = TripAgent(data, pub_key, oef_addr="127.0.0.1", oef_port=10000)
+    agent = TripAgent(data, pub_key, oef_addr="185.91.52.11", oef_port=10001)
     agent.connect()
     msg_id = randint(1, 1e9)
     agent.register_service(msg_id, agent.trip_description)

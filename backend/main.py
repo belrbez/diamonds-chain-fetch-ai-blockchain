@@ -31,8 +31,8 @@ def add_journey_request():
     data = flask.request.json
     data['trip_id'] = uuid4().hex
     data['status'] = 'WAIT'
-    data['from_location'] = {'latitude': data['start']['latitude'], 'longitude': data['start']['longitude']}
-    data['to_location'] = {'latitude': data['end']['latitude'], 'longitude': data['end']['longitude']}
+    data['from_location'] = Location(data['start']['longitude'], data['start']['latitude'])
+    data['to_location'] = Location(data['end']['longitude'], data['end']['latitude'])
     data['distance_area'] = uniform(0, 2)
     data['position'] = data['from_location']
     Thread(target=add_agent_to_oef, args=(data,)).start()

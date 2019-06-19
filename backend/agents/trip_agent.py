@@ -109,7 +109,8 @@ class TripAgent(OEFAgent):
                                                              self.data['position'].longitude))
             else:
                 print('Transport change location', msg)
-                self.data['transp_location'] = {'latitude': msg['location_latitude'], 'longitude': msg['longitude']}
+                self.data['transp_location'] = {'latitude': msg['location_latitude'],
+                                                'longitude': msg['location_longitude']}
 
             return
 

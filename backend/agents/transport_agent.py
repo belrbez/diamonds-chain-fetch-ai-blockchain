@@ -30,6 +30,15 @@ class TransportAgent(OEFAgent):
         self.transport_description = Description(self.data, TRANSPORT_DATAMODEL())
         self.distance_allowed_area = 20.0
 
+    def with_logging(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            print('LOG: Running job "%s"' % func.__name__)
+            result = func(*args, **kwargs)
+            print('LOG: Job "%s" completed' % func.__name__)
+            return result
+        return wrapper
+
     @with_logging
     def search_drivers(self):
         print("[{}]: Transport: Searching for Passenger trips...".format(self.public_key))
@@ -97,15 +106,6 @@ class TransportAgent(OEFAgent):
         self.data['state'] = 'WAIT'
         # schedule.clear('driving-jobs')
         print("[{0}]: Transport: Trip finished.".format(self.public_key))
-
-def with_logging(func):
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        print('LOG: Running job "%s"' % func.__name__)
-        result = func(*args, **kwargs)
-        print('LOG: Job "%s" completed' % func.__name__)
-        return result
-    return wrapper
 
 
 def add_transport_agent(data):

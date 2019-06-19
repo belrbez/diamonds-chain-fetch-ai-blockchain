@@ -1,14 +1,12 @@
-import functools
 import json
 from typing import List
 from random import randint
 
-import schedule
 from fetchai.ledger.crypto import Entity, Address
 from oef.agents import OEFAgent
 from oef.query import Query, Constraint, Eq, Distance
 from oef.schema import Description, Location
-import time
+import sched, time
 from agents.transport_schema import TRANSPORT_DATAMODEL
 from agents.trip_schema import TRIP_DATAMODEL
 
@@ -30,22 +28,15 @@ class TransportAgent(OEFAgent):
         self.transport_description = Description(self.data, TRANSPORT_DATAMODEL())
         self.distance_allowed_area = 20.0
 
-    def with_logging(func):
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            print('LOG: Running job "%s"' % func.__name__)
-            result = func(*args, **kwargs)
-            print('LOG: Job "%s" completed' % func.__name__)
-            return result
-        return wrapper
-
-    @with_logging
     def search_drivers(self):
         print("[{}]: Transport: Searching for Passenger trips...".format(self.public_key))
         query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area)),
                        Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area)),
                        Constraint(TRIP_DATAMODEL.CAN_BE_DRIVER.name, Eq(True))])
         self.search_services(0, query)
+        s = sched.scheduler(time.time, time.sleep)
+        ev = s.enter(10, 1, self.search_drivers())
+        s.run(False)
 
     def search_passengers(self):
         print("[{}]: Transport: Searching for Passenger and Drivers trips...".format(self.public_key))
@@ -115,7 +106,9 @@ def add_transport_agent(data):
     agent.register_service(randint(1, 1e9), agent.transport_description)
 
     print("[{}]: Transport: PreLaunching new transport agent...".format(agent.public_key))
-    schedule.every(10).seconds.do(agent.search_drivers)
+    s = sched.scheduler(time.time, time.sleep)
+    ev = s.enter(10, 1, agent.search_drivers())
+    s.run(False)
     print("[{}]: Transport: Launching new transport agent...".format(agent.public_key))
 
     try:

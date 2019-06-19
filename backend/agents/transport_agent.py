@@ -30,7 +30,7 @@ class TransportAgent(OEFAgent):
             'location_longitude': data['location'].longitude
         }
         self.transport_description = Description(self.data, TRANSPORT_DATAMODEL())
-        self.distance_allowed_area = 1
+        self.distance_allowed_area = 5
         self.velocity = 0.1
 
     def search_drivers(self):

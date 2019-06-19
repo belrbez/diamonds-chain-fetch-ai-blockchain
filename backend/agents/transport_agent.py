@@ -48,6 +48,11 @@ class TransportAgent(OEFAgent):
              ])
         self.search_services(randint(1, 1e9), query)
 
+    def on_decline(self, msg_id: int, dialogue_id: int, origin: str, target: int):
+        time.sleep(20)
+        print('Restart search after declining')
+        self.search_drivers()
+
     def search_passengers(self):
         print("[{0}]: Transport: Searching for Passenger trips {1} with allowed distance {2}...".format(self.public_key,
                                                                                                         self.data[

@@ -131,8 +131,8 @@ def add_transport_agent(data):
     agent = TransportAgent(data, pub_key, oef_addr="127.0.0.1", oef_port=10000)
     agent.connect()
     print('register trip req with coordinates {} {}'.format(
-        agent.transport_description.data_model['from_location']['latitude'],
-        agent.transport_description.data_model['to_location']['latitude']))
+        agent.transport_description.values.get('from_location')['latitude'],
+        agent.transport_description.values.get('to_location')['latitude']))
     agent.register_service(randint(1, 1e9), agent.transport_description)
 
     print("[{}]: Transport: Searching for Passenger trips...".format(agent.public_key))

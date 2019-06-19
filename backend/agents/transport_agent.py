@@ -51,7 +51,7 @@ class TransportAgent(OEFAgent):
     def on_search_result(self, search_id: int, agents: List[str]):
         if self.data['state'] == 'DRIVE':
             s = sched.scheduler(time.time, time.sleep)
-            ev = s.enter(10000, 1, self.search_drivers())
+            ev = s.enter(10, 1, self.search_drivers())
             s.run(False)
             return
 
@@ -59,7 +59,7 @@ class TransportAgent(OEFAgent):
         if len(agents) == 0:
             print("[{}]: Transport: No trips found. Waiting for next loop...".format(self.public_key))
             s = sched.scheduler(time.time, time.sleep)
-            ev = s.enter(10000, 1, self.search_drivers())
+            ev = s.enter(10, 1, self.search_drivers())
             s.run(False)
             return
 
@@ -74,7 +74,7 @@ class TransportAgent(OEFAgent):
             print("[{0}]: Transport: Sending propose with location: {1}".format(self.public_key, self.data['location']))
             self.send_propose(1, 0, agent, 0, [proposal])
         s = sched.scheduler(time.time, time.sleep)
-        ev = s.enter(10000, 1, self.search_drivers())
+        ev = s.enter(10, 1, self.search_drivers())
         s.run(False)
 
     def on_accept(self, msg_id: int, dialogue_id: int, origin: str, target: int):
@@ -115,7 +115,7 @@ def add_transport_agent(data):
 
     print("[{}]: Transport: PreLaunching new transport agent...".format(agent.public_key))
     s = sched.scheduler(time.time, time.sleep)
-    ev = s.enter(10000, 1, agent.search_drivers())
+    ev = s.enter(10, 1, agent.search_drivers())
     s.run(False)
     print("[{}]: Transport: Launching new transport agent...".format(agent.public_key))
 

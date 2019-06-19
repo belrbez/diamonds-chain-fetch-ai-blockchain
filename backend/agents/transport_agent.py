@@ -79,9 +79,10 @@ class TransportAgent(OEFAgent):
             # prepare the proposal with a given price and current location
             proposal = Description({
                 "price_per_km": self.data['price_per_km'],
-                "location": self.data['location'],
+                "location_latitude": self.data['location_latitude'],
+                "location_longitude": self.data['location_longitude'],
             })
-            print("[{0}]: Transport: Sending propose with location: {1}".format(self.public_key, self.data['location']))
+            print("[{0}]: Transport: Sending propose with location: {1}".format(self.public_key, self.data['location_latitude']))
             self.send_propose(1, 0, agent, 0, [proposal])
 
     def on_accept(self, msg_id: int, dialogue_id: int, origin: str, target: int):

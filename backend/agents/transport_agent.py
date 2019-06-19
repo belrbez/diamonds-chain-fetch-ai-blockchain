@@ -133,7 +133,7 @@ class TransportAgent(OEFAgent):
         self.send_transp_loc(origin, cur_loc)
         self.data['location_latitude'] = cur_loc.latitude
         self.data['location_longitude'] = cur_loc.longitude
-        print("[{0}]: Transport: {}.".format(self.public_key, point_descr))
+        print("[{0}]: Transport: {1}.".format(self.public_key, point_descr))
 
 
 

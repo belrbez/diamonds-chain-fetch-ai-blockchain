@@ -50,7 +50,7 @@ def get_journey_request(trip_id: str):
     }
     data['to_location'] = {
         'longitude': data['to_location_longitude'],
-        'latitude': data['to_location_latitude']
+        'latitude': data['to_location_longitude']
     }
     data['position'] = {
         'longitude': data['position'].longitude,

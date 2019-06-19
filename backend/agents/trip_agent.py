@@ -57,7 +57,7 @@ class TripAgent(OEFAgent):
         msg = json.loads(content.decode("utf-8"))
 
         if 'type' in msg and msg['type'] == 'location':
-            self.data['cur_loc'] = msg['location']
+            self.data['cur_loc'] = Location(msg['location_latitude'], msg['location_longitude'])
             print('Account upd location to {} {}'.format(self.data['cur_loc'].latitude, self.data['cur_loc'].longitude))
             return
 

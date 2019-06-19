@@ -100,7 +100,8 @@ class TransportAgent(OEFAgent):
         if 'type' in data and data['type'] == 'location':
             new_loop = asyncio.new_event_loop()
             Thread(target=self.update_transport_location,
-                   args=(origin, data['from_location'], data['to_location'], new_loop)).start()
+                   args=(origin, Location(data['from_location_latitude'], data['from_location_longitude']),
+                         Location(data['to_location_latitude'], data['to_location_longitude']), new_loop)).start()
 
     def update_transport_location(self, origin, source_loc: Location, target_loc: Location, loop):
         asyncio.set_event_loop(loop)

@@ -69,6 +69,7 @@ class TransportAgent(OEFAgent):
         print("[{0}]: Transport: Driving {1}...".format(self.public_key, cur_location))
 
     def on_search_result(self, search_id: int, agents: List[str]):
+        print('On search result')
         if self.data['state'] == 'DRIVE':
             print("[{0}]: Transport: State is driving, no need to search driver...".format(
                 self.public_key))

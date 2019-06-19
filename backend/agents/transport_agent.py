@@ -112,9 +112,11 @@ class TransportAgent(OEFAgent):
         self.search_drivers()
 
     def run(self) -> None:
+        threading.Timer(10.0, self.search_drivers).start()
         self._loop.run_until_complete(self.async_run())
         print("Timer")
-        threading.Timer(10.0, self.search_drivers).start()
+        time.sleep(10)
+        self.search_drivers()
         print("PostTimer")
 
 

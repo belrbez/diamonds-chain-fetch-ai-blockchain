@@ -122,12 +122,15 @@ class TransportAgent(OEFAgent):
         y_diff_sign = -1 if y_diff < 0 else 1
 
         time.sleep(1)
-        while cur_loc != target_point:
+        while abs(cur_loc.latitude - target_point.latitude) <= x_diff and abs(
+                cur_loc.longitude - target_point.longitude) <= y_diff:
             cur_loc = Location(cur_loc.latitude + x_velocity * x_diff_sign,
                                cur_loc.longitude + y_velocity * y_diff_sign)
             print('Update location of transport to {} {}'.format(cur_loc.latitude, cur_loc.longitude))
             self.send_transp_loc(origin, cur_loc)
             time.sleep(1)
+        cur_loc = target_point
+        self.send_transp_loc(origin, cur_loc)
 
     def send_transp_loc(self, origin, loc):
         msg_id = randint(1, 1e9)

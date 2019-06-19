@@ -45,12 +45,12 @@ def get_journey_request(trip_id: str):
         flask.abort(404)
     data = dict(trips[trip_id])
     data['from_location'] = {
-        'longitude': data['from_location'].longitude,
-        'latitude': data['from_location'].latitude
+        'longitude': data['from_location']['longitude'],
+        'latitude': data['from_location']['latitude']
     }
     data['to_location'] = {
-        'longitude': data['to_location'].longitude,
-        'latitude': data['to_location'].latitude
+        'longitude': data['to_location']['longitude'],
+        'latitude': data['to_location']['latitude']
     }
     data['position'] = {
         'longitude': data['position'].longitude,

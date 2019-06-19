@@ -24,8 +24,6 @@ class TransportAgent(OEFAgent):
         self.data = {
             'price_per_km': data['price_per_km'],
             'state': "WAIT",
-            'driver_id': None,
-            'passengers_ids': None,
             'position': data['position']
         }
         self.transport_description = Description(self.data, TRANSPORT_DATAMODEL())

@@ -2,7 +2,7 @@ from oef.schema import DataModel, AttributeSchema, Location
 
 class TRANSPORT_DATAMODEL(DataModel):
     PRICE_PER_KM = AttributeSchema("price_per_km",
-                                   int,
+                                   float,
                                    is_attribute_required=True,
                                    attribute_description="Provides the price per kilometer.")
 

@@ -5,6 +5,7 @@ from random import uniform
 from threading import Thread
 from uuid import uuid4
 from oef.schema import Location
+from flask_cors import CORS
 
 import flask
 
@@ -12,6 +13,7 @@ from agents.transport_agent import add_transport_agent
 from agents.trip_agent import add_trip_agent
 
 app = flask.Flask(__name__)
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 trips = {}
 

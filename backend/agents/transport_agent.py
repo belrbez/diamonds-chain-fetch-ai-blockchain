@@ -53,6 +53,10 @@ class TransportAgent(OEFAgent):
         print('Restart search after declining')
         self.search_drivers()
 
+    def on_dialogue_error(self, answer_id: int, dialogue_id: int, origin: str):
+        print('Transport: On dialogue error')
+
+
     def search_passengers(self):
         print("[{0}]: Transport: Searching for Passenger trips {1} with allowed distance {2}...".format(self.public_key,
                                                                                                         self.data[

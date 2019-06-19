@@ -98,43 +98,46 @@ export class MapComponent implements OnInit, OnDestroy {
           ),  // Cordinates of New York's Town Hall
         });
 
-        marker.setStyle(new ol.style.Style({
-          image: new ol.style.Icon(({
-            color: pick.pickValFrom ? '#ff4444' : '#44ff44',
-            crossOrigin: 'anonymous',
-            src: 'https://cdn-images-1.medium.com/max/600/1*SQI_HuavHth418JorokW1Q.png'
-          }))
-        }));
+        if (marker) {
 
-        if (pick.pickValFrom) {
-          pick.latitudeFrom = lonlat[1];
-          pick.longitudeFrom = lonlat[0];
-        } else {
-          pick.latitudeTo = lonlat[1];
-          pick.longitudeTo = lonlat[0];
-        }
+          marker.setStyle(new ol.style.Style({
+            image: new ol.style.Icon(({
+              color: pick.pickValFrom ? '#ff4444' : '#44ff44',
+              crossOrigin: 'anonymous',
+              src: 'https://cdn-images-1.medium.com/max/600/1*SQI_HuavHth418JorokW1Q.png'
+            }))
+          }));
 
-        const vectorSource = new ol.source.Vector({
-          features: [marker]
-        });
-
-        const markerVectorLayer = new ol.layer.Vector({
-          source: vectorSource,
-        });
-
-        if (pick.pickValFrom) {
-          if (pick.markerVectorLayerFrom !== null) {
-            map.removeLayer(pick.markerVectorLayerFrom);
+          if (pick.pickValFrom) {
+            pick.latitudeFrom = lonlat[1];
+            pick.longitudeFrom = lonlat[0];
+          } else {
+            pick.latitudeTo = lonlat[1];
+            pick.longitudeTo = lonlat[0];
           }
-          pick.markerVectorLayerFrom = markerVectorLayer;
-        } else {
-          if (pick.markerVectorLayerTo !== null) {
-            map.removeLayer(pick.markerVectorLayerTo);
-          }
-          pick.markerVectorLayerTo = markerVectorLayer;
-        }
 
-        map.addLayer(markerVectorLayer);
+          const vectorSource = new ol.source.Vector({
+            features: [marker]
+          });
+
+          const markerVectorLayer = new ol.layer.Vector({
+            source: vectorSource,
+          });
+
+          if (pick.pickValFrom) {
+            if (pick.markerVectorLayerFrom !== null) {
+              map.removeLayer(pick.markerVectorLayerFrom);
+            }
+            pick.markerVectorLayerFrom = markerVectorLayer;
+          } else {
+            if (pick.markerVectorLayerTo !== null) {
+              map.removeLayer(pick.markerVectorLayerTo);
+            }
+            pick.markerVectorLayerTo = markerVectorLayer;
+          }
+
+          map.addLayer(markerVectorLayer);
+        }
       }
       // const lon = lonlat[0];
       // const lat = lonlat[1];
@@ -173,36 +176,38 @@ export class MapComponent implements OnInit, OnDestroy {
 
         this.setTimeoutId = setInterval(() => {
           this.accountService.getTrip(this.accountService.account.id, trip.trip_id).then((trip2: Trip | null) => {
-            const marker = new ol.Feature({
-              geometry: new ol.geom.Point(
-                ol.proj.fromLonLat([trip2.transp_location.longitude, trip2.transp_location.latitude])
-              ),  // Cordinates of New York's Town Hall
-            });
+            if (trip2 && trip2.transp_location) {
+              const marker = new ol.Feature({
+                geometry: new ol.geom.Point(
+                  ol.proj.fromLonLat([trip2.transp_location.longitude, trip2.transp_location.latitude])
+                ),  // Cordinates of New York's Town Hall
+              });
 
-            marker.setStyle(new ol.style.Style({
-              image: new ol.style.Icon(({
-                color: '#4444ff',
-                crossOrigin: 'anonymous',
-                src: 'https://cdn-images-1.medium.com/max/600/1*SQI_HuavHth418JorokW1Q.png'
-              }))
-            }));
+              marker.setStyle(new ol.style.Style({
+                image: new ol.style.Icon(({
+                  color: '#4444ff',
+                  crossOrigin: 'anonymous',
+                  src: 'https://cdn-images-1.medium.com/max/600/1*SQI_HuavHth418JorokW1Q.png'
+                }))
+              }));
 
-            const vectorSource = new ol.source.Vector({
-              features: [marker]
-            });
+              const vectorSource = new ol.source.Vector({
+                features: [marker]
+              });
 
-            const markerVectorLayer = new ol.layer.Vector({
-              source: vectorSource,
-            });
+              const markerVectorLayer = new ol.layer.Vector({
+                source: vectorSource,
+              });
 
 
-            if (this.markerVectorLayer !== null) {
-              this.accountService.map.removeLayer(this.markerVectorLayer);
+              if (this.markerVectorLayer !== null) {
+                this.accountService.map.removeLayer(this.markerVectorLayer);
+              }
+
+              this.markerVectorLayer = markerVectorLayer;
+
+              this.accountService.map.addLayer(markerVectorLayer);
             }
-
-            this.markerVectorLayer = markerVectorLayer;
-
-            this.accountService.map.addLayer(markerVectorLayer);
           });
         }, 1000);
       }

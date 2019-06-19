@@ -65,8 +65,10 @@ class TripAgent(OEFAgent):
 
         self.send_message(msg_id, dialogue_id, origin, json.dumps({
             'type': 'location',
-            'from_location': Location(self.data['from_location_latitude'], self.data['from_location_longitude']),
-            'to_location': Location(self.data['to_location_latitude'], self.data['to_location_longitude']),
+            'from_location_latitude': self.data['from_location_latitude'],
+            'from_location_longitude': self.data['from_location_longitude'],
+            'to_location_latitude': self.data['to_location_latitude'],
+            'to_location_longitude': self.data['to_location_longitude']
         }).encode('utf-8'))
         self.stop()
 

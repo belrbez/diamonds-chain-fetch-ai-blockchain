@@ -124,7 +124,8 @@ class TransportAgent(OEFAgent):
         msg_id = randint(1, 1e9)
         d_id = randint(1, 1e9)
         self.send_message(msg_id, d_id, origin, json.dumps({
-            'location': loc,
+            'location_latitude': loc.latitude,
+            'location_longitude': loc.longitude,
             'type': 'location'
         }))
 

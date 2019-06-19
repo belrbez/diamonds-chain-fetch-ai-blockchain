@@ -28,7 +28,7 @@ def main(name: str):
     time.sleep(5)
 
     # Printing balance of the creating address1
-    print(contract.query(api, 'getAccountRides'), "1")
+    print(contract.query(api, 'getAccountRides', "1"))
 
 if __name__ == '__main__': 
     # Loading contract

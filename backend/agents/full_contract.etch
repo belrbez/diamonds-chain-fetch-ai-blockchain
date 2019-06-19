@@ -1,0 +1,47 @@
+function main()
+  var owner = Address("2ifr5dSFRAnXexBMC3HYEVp3JHSuz7KBPXWDRBV4xdFrqGy6R9");
+  var new_member = Address("MnrRHdvCkdZodEwM855vemS5V3p2hiWmcSQ8JEzD4ZjPdsYtB");
+
+  createContract(owner);
+endfunction
+
+@init
+function createContract(transport: Address)
+
+endfunction
+
+@action
+function assignTransport(transport: Address, trip: Address)
+
+  // Scooter 
+  var trip_transport = ShardedState< Address >("trip.transport");
+  trip_transport.set(trip, transport);
+
+endfunction
+
+@action
+function endJourney(transport: Address, trip: Address, acc_id: String, isDriver: Bool)
+
+  if (isDriver)
+      var account_num_trips = ShardedState< Int32 >("account.trips");
+      var cur = account_num_trips.get(acc_id);
+      if (cur == null)
+        account_num_trips.set(acc_id, 1);
+      else
+        account_num_trips.set(acc_id, cur + 1);
+      endif
+  endif
+  var trip_transport = ShardedState< String >("trip.transport");
+  trip_transport.get(trip, transport);
+
+  var finished_trips  = State< Address  >("trips.finished");
+  finished_trips.set(trip)
+
+endfunction
+
+@query
+function getAccountRides(acc_id: String) : Int32
+  var account_num_trips = ShardedState< Int32 >("account.trips");
+  return account_num_trips.get(acc_id);
+endfunction
+

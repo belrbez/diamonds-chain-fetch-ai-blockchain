@@ -1,6 +1,4 @@
 import json
-import sched
-import threading
 import time
 from random import randint
 from typing import List
@@ -56,6 +54,7 @@ class TransportAgent(OEFAgent):
         # """For every agent returned in the service search, send a CFP to obtain resources from them."""
         if len(agents) == 0:
             print("[{}]: Transport: No trips found. Waiting for next loop...".format(self.public_key))
+            time.sleep(10)
             self.search_drivers()
             return
 
@@ -90,7 +89,6 @@ class TransportAgent(OEFAgent):
         self.data['state'] = 'WAIT'
         # schedule.clear('driving-jobs')
         print("[{0}]: Transport: Trip finished.".format(self.public_key))
-        self.search_drivers()
 
 
 
@@ -98,6 +96,8 @@ class TransportAgent(OEFAgent):
         encoded_data = json.dumps(contract).encode("utf-8")
         print("[{0}]: Transport: Sending contract to {1}".format(self.public_key, origin))
         self.send_message(0, dialogue_id, origin, encoded_data)
+
+        self.search_drivers()
 
     def on_start_trip(self):
         return

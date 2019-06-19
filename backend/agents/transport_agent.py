@@ -31,7 +31,7 @@ class TransportAgent(OEFAgent):
         self.transport_description = Description(self.data, TRANSPORT_DATAMODEL())
         self.distance_allowed_area = 20.0
 
-    async def search_drivers(self):
+    def search_drivers(self):
         print("[{}]: Transport: Searching for Passenger trips...".format(self.public_key))
         query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area)),
                        Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area)),
@@ -113,11 +113,8 @@ class TransportAgent(OEFAgent):
 
     def run(self) -> None:
         threading.Timer(10.0, self.search_drivers).start()
-        self._loop.run_until_complete(self.async_run())
-        print("Timer")
-        time.sleep(10)
-        self.search_drivers()
         print("PostTimer")
+        self._loop.run_until_complete(self.async_run())
 
 
 def add_transport_agent(data):

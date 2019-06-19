@@ -28,7 +28,7 @@ class TransportAgent(OEFAgent):
             'location_longitude': data['location'].longitude
         }
         self.transport_description = Description(self.data, TRANSPORT_DATAMODEL())
-        self.distance_allowed_area = 10.0
+        self.distance_allowed_area = 3.0
 
     def search_drivers(self):
         print("[{0}]: Transport: Searching for Passenger trips {1} with allowed distance {2}..."
@@ -37,7 +37,12 @@ class TransportAgent(OEFAgent):
             [Constraint(TRIP_DATAMODEL.FROM_LOCATION_LONGITUDE.name,
                         GtEq(self.data['location_longitude'] - self.distance_allowed_area)),
              Constraint(TRIP_DATAMODEL.FROM_LOCATION_LONGITUDE.name,
-                        LtEq(self.data['location_longitude'] + self.distance_allowed_area))])
+                        LtEq(self.data['location_longitude'] + self.distance_allowed_area)),
+             Constraint(TRIP_DATAMODEL.FROM_LOCATION_LATITUDE.name,
+                        GtEq(self.data['location_latitude'] - self.distance_allowed_area)),
+             Constraint(TRIP_DATAMODEL.FROM_LOCATION_LATITUDE.name,
+                        LtEq(self.data['location_latitude'] + self.distance_allowed_area))
+             ])
         self.search_services(0, query)
 
     def search_passengers(self):

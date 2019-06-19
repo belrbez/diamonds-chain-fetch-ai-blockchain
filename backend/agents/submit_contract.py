@@ -28,7 +28,7 @@ def call(name: str)-> SmartContract:
     time.sleep(5)
 
     # Printing balance of the creating address1
-    print(contract.query(api, 'getAccountRides', "1"))
+    print(contract.query(api, 'getAccountRides', acc_id = "1"))
 
 def main():
     call("./full_contract.etch")

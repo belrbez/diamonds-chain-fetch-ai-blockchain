@@ -21,7 +21,7 @@ class TRANSPORT_DATAMODEL(DataModel):
                                  is_attribute_required=False,
                                  attribute_description="All passangers.")
 
-    POSITION = AttributeSchema("position",
+    LOCATION = AttributeSchema("location",
                                Location,
                                is_attribute_required=True,
                                attribute_description="Latitude of transport.")
@@ -31,5 +31,5 @@ class TRANSPORT_DATAMODEL(DataModel):
                                             self.STATE,
                                             self.DRIVER_ID,
                                             self.PASSENGERS,
-                                            self.POSITION],
+                                            self.LOCATION],
                          "Transport create fully.")

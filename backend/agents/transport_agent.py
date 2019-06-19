@@ -6,7 +6,7 @@ import schedule
 from fetchai.ledger.crypto import Entity, Address
 from oef.agents import OEFAgent
 from oef.query import Query, Constraint, Eq, Distance
-from oef.schema import Description
+from oef.schema import Description, Location
 
 from agents.transport_schema import TRANSPORT_DATAMODEL
 from agents.trip_schema import TRIP_DATAMODEL
@@ -24,26 +24,36 @@ class TransportAgent(OEFAgent):
         self.data = {
             'price_per_km': data['price_per_km'],
             'state': "WAIT",
-            'position': data['position']
+            'driver_id': None,
+            'passengers_ids': None,
+            'location': data['location']
         }
         self.transport_description = Description(self.data, TRANSPORT_DATAMODEL())
+        self.distance_allowed_area = 20.0
 
     def search_drivers(self):
         print("[{}]: Transport: Searching for Passenger trips...".format(self.public_key))
-        # TODO: use TRIP_DATAMODEL.DISTANCE_AREA to compare
-        query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['position'], 20.0)),
-                       Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['position'], 30.0)),
+        query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['position'], self.distance_allowed_area)),
+                       Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['position'], self.distance_allowed_area)),
                        Constraint(TRIP_DATAMODEL.CAN_BE_DRIVER.name, Eq(True))])
         self.search_services(0, query)
 
     def search_passengers(self):
         print("[{}]: Transport: Searching for Passenger and Drivers trips...".format(self.public_key))
-        query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['position'], 20.0)),
-                       Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['position'], 30.0))])
+        query = Query([Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['position'], self.distance_allowed_area)),
+                       Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['position'], self.distance_allowed_area))])
         self.search_services(0, query)
 
+    def update_location(self):
+        cur_location : Location = self.data['location']
+        # cur_location.distance()
+        print("[{0}]: Transport: Driving {1}...".format(self.public_key, cur_location))
+
     def on_search_result(self, search_id: int, agents: List[str]):
-        """For every agent returned in the service search, send a CFP to obtain resources from them."""
+        if self.data['state'] == 'DRIVE':
+            return
+
+        # """For every agent returned in the service search, send a CFP to obtain resources from them."""
         if len(agents) == 0:
             print("[{}]: Transport: No trips found. Waiting for next loop...".format(self.public_key))
             time.sleep(3)
@@ -51,10 +61,13 @@ class TransportAgent(OEFAgent):
 
         print("[{0}]: Transport: Trips found: {1}".format(self.public_key, agents))
         for agent in agents:
-            print("[{0}]: Transport: Sending cfp to trip {1}".format(self.public_key, agent))
-            # prepare the proposal with a given price.
-            proposal = Description({"price_per_km": self.data['price_per_km']})
-            print("[{}]: Transport: Sending propose with price: {}".format(self.public_key, self.data['price_per_km']))
+            print("[{0}]: Transport: Sending proposal (without cfp) to trip {1}".format(self.public_key, agent))
+            # prepare the proposal with a given price and current location
+            proposal = Description({
+                "price_per_km": self.data['price_per_km'],
+                "location": self.data['location'],
+            })
+            print("[{0}]: Transport: Sending propose with location: {1}".format(self.public_key, self.data['location']))
             self.send_propose(1, 0, agent, 0, [proposal])
 
     def on_accept(self, msg_id: int, dialogue_id: int, origin: str, target: int):
@@ -64,10 +77,6 @@ class TransportAgent(OEFAgent):
         # TRIP IN PROGRESS
         print("[{0}]: Transport: Trip in progress.".format(self.public_key))
         self.data['state'] = 'DRIVE'
-        schedule.every(10).seconds.do(self.search_passangers)
-        time.sleep(5)
-        self.data['state'] = 'WAIT'
-        print("[{0}]: Transport: Trip finished.".format(self.public_key))
 
         # Preparing contract
         # PLACE HOLDER TO PREPARE AND SIGN TRANSACTION
@@ -79,6 +88,15 @@ class TransportAgent(OEFAgent):
         print("[{0}]: Transport: Sending contract to {1}".format(self.public_key, origin))
         self.send_message(0, dialogue_id, origin, encoded_data)
 
+    def on_start_trip(self):
+        schedule.every(10).seconds.do(self.search_passengers, ).tag('driving-jobs')
+        schedule.every(1).seconds.do(self.update_location).tag('driving-jobs')
+
+    def on_finish_drive(self):
+        time.sleep(20)
+        self.data['state'] = 'WAIT'
+        schedule.clear('driving-jobs')
+        print("[{0}]: Transport: Trip finished.".format(self.public_key))
 
 def add_transport_agent(data):
     pub_key = str(randint(1, 1e9)).replace('0', 'A').replace('1', 'B')

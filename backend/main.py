@@ -23,7 +23,7 @@ def to_json(data):
 def add_agent_to_oef(data):
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
-    add_trip_agent(data)
+    add_trip_agent(data, trips)
 
 
 @app.route("/trips", methods=['POST'])
@@ -31,26 +31,41 @@ def add_journey_request():
     data = flask.request.json
     data['trip_id'] = uuid4().hex
     data['status'] = 'WAIT'
-    data['from_location'] = Location(data['start']['longitude'], data['start']['latitude'])
-    data['to_location'] = Location(data['end']['longitude'], data['end']['latitude'])
+    data['from_location'] = Location(data['start']['latitude'], data['start']['longitude'])
+    data['to_location'] = Location(data['end']['latitude'], data['end']['longitude'])
     data['distance_area'] = uniform(0, 2)
+    data['position'] = data['from_location']
     Thread(target=add_agent_to_oef, args=(data,)).start()
-    trips[data['account_id']] = data
-    return data['trip_id']
+    return to_json({"trip_id": data['trip_id']})
 
 
 @app.route('/trips/<trip_id>', methods=['GET'])
 def get_journey_request(trip_id: str):
     if trip_id not in trips:
         flask.abort(404)
-    return to_json(trips[trip_id])
+    data = dict(trips[trip_id])
+    data['from_location'] = {
+        'longitude': data['from_location_longitude'],
+        'latitude': data['from_location_latitude']
+    }
+    data['to_location'] = {
+        'longitude': data['to_location_longitude'],
+        'latitude': data['to_location_longitude']
+    }
+    data['position'] = {
+        'longitude': data['position'].longitude,
+        'latitude': data['position'].latitude
+    }
+    print(str(data['position']))
+    return to_json(data)
 
 
 def add_transport_agent_to_oef():
     print('Attempt to add transport agent')
     data = {
         'id': uuid4().hex,
-        'location': Location(uniform(59, 61), uniform(29, 31)),
+        'location': Location(uniform(59.932097364508536, 59.93209736450854),
+                             uniform(30.312159061431885, 30.31215906143189)),
         'price_per_km': uniform(1, 3),
         'status': 'WAIT'
     }

@@ -6,6 +6,7 @@ from typing import List
 import asyncio
 from threading import Thread
 from fetchai.ledger.crypto import Entity, Address
+from fetchai.ledger.api import LedgerApi
 from oef.agents import OEFAgent
 from oef.query import Query, Constraint, Eq, Distance, GtEq, LtEq
 from oef.schema import Description, Location
@@ -30,8 +31,9 @@ class TransportAgent(OEFAgent):
             'location_longitude': data['location'].longitude
         }
         self.transport_description = Description(self.data, TRANSPORT_DATAMODEL())
-        self.distance_allowed_area = 1
-        self.velocity = 0.1
+        self.distance_allowed_area = 5
+        self.velocity = 0.0005
+        # self.contract = data['rent_contract']
 
     def search_drivers(self):
         print("[{0}]: Transport: Searching for Passenger trips {1} with allowed distance {2}..."
@@ -46,7 +48,15 @@ class TransportAgent(OEFAgent):
              Constraint(TRIP_DATAMODEL.FROM_LOCATION_LATITUDE.name,
                         LtEq(self.data['location_latitude'] + self.distance_allowed_area))
              ])
-        self.search_services(0, query)
+        self.search_services(randint(1, 1e9), query)
+
+    def on_decline(self, msg_id: int, dialogue_id: int, origin: str, target: int):
+        time.sleep(20)
+        print('Restart search after declining')
+        self.search_drivers()
+
+    def on_dialogue_error(self, answer_id: int, dialogue_id: int, origin: str):
+        pass
 
     def search_passengers(self):
         print("[{0}]: Transport: Searching for Passenger trips {1} with allowed distance {2}...".format(self.public_key,
@@ -69,6 +79,7 @@ class TransportAgent(OEFAgent):
         print("[{0}]: Transport: Driving {1}...".format(self.public_key, cur_location))
 
     def on_search_result(self, search_id: int, agents: List[str]):
+        print('On search result')
         if self.data['state'] == 'DRIVE':
             print("[{0}]: Transport: State is driving, no need to search driver...".format(
                 self.public_key))
@@ -128,15 +139,22 @@ class TransportAgent(OEFAgent):
                 abs(cur_loc.longitude - target_point.longitude) >= abs(y_velocity):
             cur_loc = Location(cur_loc.latitude + x_velocity * x_diff_sign,
                                cur_loc.longitude + y_velocity * y_diff_sign)
-            print('Update location of transport to {} {}'.format(cur_loc.latitude, cur_loc.longitude))
+            # print('Update location of transport to {} {}'.format(cur_loc.latitude, cur_loc.longitude))
             self.send_transp_loc(origin, cur_loc, transp_status)
             time.sleep(1)
         cur_loc = target_point
         self.send_transp_loc(origin, cur_loc, transp_status)
         self.data['location_latitude'] = cur_loc.latitude
         self.data['location_longitude'] = cur_loc.longitude
-        descr = 'Picked up account' if transp_status == 'Getting to trip' else 'Trip finished'
-        print("[{0}]: Transport: {1}.".format(self.public_key, descr))
+        if transp_status == 'Getting to trip':
+            print("[{0}]: Transport: {1}.".format(self.public_key, 'Picked up account'))
+        else:
+            print("[{0}]: Transport: {1}.".format(self.public_key, 'Trip finished'))
+            self.send_message(randint(1, 1e9), randint(1, 1e9), origin, json.dumps({
+                'type': 'finished'
+            }).encode('utf-8'))
+            self.data['state'] = 'WAIT'
+            self.search_drivers()
 
     def send_transp_loc(self, origin, loc, status):
         msg_id = randint(1, 1e9)
@@ -159,24 +177,20 @@ class TransportAgent(OEFAgent):
         # Preparing contract
         # PLACE HOLDER TO PREPARE AND SIGN TRANSACTION
         # decentralized_trip_contract
-        contract = {"contract": "data"}
-
-        self.data['state'] = 'WAIT'
-        # schedule.clear('driving-jobs')
-
         # Sending contract
+        # encoded_data = json.dumps(self.contract).encode("utf-8")
+        contract = {'type': 'contract', "contract": "data"}
         encoded_data = json.dumps(contract).encode("utf-8")
+
         print("[{0}]: Transport: Sending contract to {1}".format(self.public_key, origin))
         self.send_message(0, dialogue_id, origin, encoded_data)
         self.request_agent_location(origin)
-
-        self.search_drivers()
 
     def request_agent_location(self, origin):
         msg_id = randint(1, 1e9)
         dialogue_id = randint(1, 1e9)
         self.send_message(msg_id, dialogue_id, origin, json.dumps({
-            'request': 'location'
+            'type': 'request'
         }).encode('utf-8'))
 
     def on_start_trip(self):
@@ -197,11 +211,23 @@ class TransportAgent(OEFAgent):
     #     self._loop.run_until_complete(self.async_run())
 
 
+def search_cron(loop, agent):
+    asyncio.set_event_loop(loop)
+
+    while 1:
+        try:
+            time.sleep(10)
+            agent.search_drivers()
+        except Exception:
+            print('exception while waiting search drivers')
+
+
 def add_transport_agent(data):
     pub_key = str(randint(1, 1e9)).replace('0', 'A').replace('1', 'B')
-    agent = TransportAgent(data, pub_key, oef_addr="127.0.0.1", oef_port=10000)
+    agent = TransportAgent(data, pub_key, oef_addr="185.91.52.11", oef_port=10000)
     agent.connect()
     agent.register_service(randint(1, 1e9), agent.transport_description)
+    Thread(target=search_cron, args=(asyncio.new_event_loop(), agent)).start()
 
     print("[{}]: Transport: Searching for Passenger trips...".format(agent.public_key))
     agent.search_drivers()

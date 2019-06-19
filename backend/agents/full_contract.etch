@@ -35,7 +35,7 @@ function endJourney(transport: Address, trip: Address, acc_id: String, isDriver:
   trip_transport.get(trip, transport);
 
   var finished_trips  = State< Address  >("trips.finished");
-  finished_trips.set(trip)
+  finished_trips.set(trip);
 
 endfunction
 

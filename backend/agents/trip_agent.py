@@ -24,9 +24,9 @@ class TripAgent(OEFAgent):
             "can_be_driver": data['can_be_driver'],
             "trip_id": data['trip_id'],
             "from_location_latitude": data['from_location'].latitude,
-            "from_location_longitude": data['from_location'].lognitude,
+            "from_location_longitude": data['from_location'].longitude,
             "to_location_latitude": data['to_location'].latitude,
-            "to_location_longitude": data['to_location'].lognitude,
+            "to_location_longitude": data['to_location'].longitude,
             "distance_area": data['distance_area']
         }
         self.trip_description = Description(self.data, TRIP_DATAMODEL())

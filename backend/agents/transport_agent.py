@@ -111,10 +111,10 @@ class TransportAgent(OEFAgent):
         print("[{0}]: Transport: Trip finished.".format(self.public_key))
         self.search_drivers()
 
-    def run(self) -> None:
-        threading.Timer(10.0, self.search_drivers).start()
-        print("PostTimer")
-        self._loop.run_until_complete(self.async_run())
+    # def run(self) -> None:
+    #     threading.Timer(10.0, self.search_drivers).start()
+    #     print("PostTimer")
+    #     self._loop.run_until_complete(self.async_run())
 
 
 def add_transport_agent(data):
@@ -122,6 +122,13 @@ def add_transport_agent(data):
     agent = TransportAgent(data, pub_key, oef_addr="185.91.52.11", oef_port=10000)
     agent.connect()
     agent.register_service(randint(1, 1e9), agent.transport_description)
+
+    print("[{}]: Transport: Searching for Passenger trips...".format(agent.public_key))
+    query = Query(
+        [Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(agent.data['location'], agent.distance_allowed_area)),
+         Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(agent.data['location'], agent.distance_allowed_area)),
+         Constraint(TRIP_DATAMODEL.CAN_BE_DRIVER.name, Eq(True))])
+    agent.search_services(0, query)
 
     print("[{}]: Transport: Launching new transport agent...".format(agent.public_key))
 

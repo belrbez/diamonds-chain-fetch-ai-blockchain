@@ -27,8 +27,9 @@ class TripAgent(OEFAgent):
             "from_location_longitude": float(data['from_location'].longitude),
             "to_location_latitude": float(data['to_location'].latitude),
             "to_location_longitude": float(data['to_location'].longitude),
-            "distance_area": data['distance_area']
+            "distance_area": data['distance_area'],
         }
+        self.data['cur_loc'] = Location(self.data['from_location_latitude'], self.data['from_location_longitude'])
         self.trip_description = Description(self.data, TRIP_DATAMODEL())
         self.possible_trips = []
 
@@ -52,10 +53,21 @@ class TripAgent(OEFAgent):
 
         # PLACE HOLDER TO SIGN AND SUBMIT TRANSACTION
 
-        print("[{0}]: Trip: Received contract from {1}".format(self.public_key, origin))
-        transaction = json.loads(content.decode("utf-8"))
-        print("[{0}]: Trip: READY TO SUBMIT transaction: {1}".format(self.public_key, transaction))
+        print("[{0}]: Trip: Received msg from {1}".format(self.public_key, origin))
+        msg = json.loads(content.decode("utf-8"))
 
+        if 'type' in msg and msg['type'] == 'location':
+            self.data['cur_loc'] = msg['location']
+            print('Account upd location to {} {}'.format(self.data['cur_loc'].latitude, self.data['cur_loc'].longitude))
+            return
+
+        print("[{0}]: Trip: READY TO SUBMIT transaction: {1}".format(self.public_key, msg))
+
+        self.send_message(msg_id, dialogue_id, origin, json.dumps({
+            'type': 'location',
+            'from_location': Location(self.data['from_location_latitude'], self.data['from_location_longitude']),
+            'to_location': Location(self.data['to_location_latitude'], self.data['to_location_longitude']),
+        }))
         self.stop()
 
 

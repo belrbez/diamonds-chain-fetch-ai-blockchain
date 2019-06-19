@@ -3,6 +3,8 @@ import time
 from random import randint
 from typing import List
 
+import asyncio
+from threading import Thread
 from fetchai.ledger.crypto import Entity, Address
 from oef.agents import OEFAgent
 from oef.query import Query, Constraint, Eq, Distance, GtEq, LtEq
@@ -28,7 +30,8 @@ class TransportAgent(OEFAgent):
             'location_longitude': data['location'].longitude
         }
         self.transport_description = Description(self.data, TRANSPORT_DATAMODEL())
-        self.distance_allowed_area = 5.0
+        self.distance_allowed_area = 1
+        self.velocity = 0.01
 
     def search_drivers(self):
         print("[{0}]: Transport: Searching for Passenger trips {1} with allowed distance {2}..."
@@ -87,8 +90,43 @@ class TransportAgent(OEFAgent):
                 "location_latitude": self.data['location_latitude'],
                 "location_longitude": self.data['location_longitude'],
             })
-            print("[{0}]: Transport: Sending propose with location: {1}".format(self.public_key, self.data['location_latitude']))
-            self.send_propose(1, 0, agent, 0, [proposal])
+            print("[{0}]: Transport: Sending propose with location: {1}".format(self.public_key,
+                                                                                self.data['location_latitude']))
+            msg_id = randint(1, 1e9)
+            self.send_propose(msg_id, 0, agent, 0, [proposal])
+
+    def on_message(self, msg_id: int, dialogue_id: int, origin: str, content: bytes):
+        data = json.loads(content.decode('utf-8'))
+        if 'type' in data and data['type'] == 'location':
+            new_loop = asyncio.new_event_loop()
+            Thread(target=self.update_transport_location,
+                   args=(origin, data['from_location'], data['to_location'], new_loop)).start()
+
+    def update_transport_location(self, origin, source_loc: Location, target_loc: Location, loop):
+        asyncio.set_event_loop(loop)
+        self.drive_to_point(origin, source_loc)
+        self.drive_to_point(origin, target_loc)
+
+    def drive_to_point(self, origin, target_point: Location):
+        cur_loc = Location(self.data['location_latitude'], self.data['location_longitude'])
+        x_diff = target_point.latitude - cur_loc.latitude
+        y_diff = target_point.longitude - cur_loc.longitude
+        x_step = x_diff / self.velocity * (x_diff / (x_diff + y_diff))
+        y_step = y_diff / self.velocity * (y_diff / (x_diff + y_diff))
+        time.sleep(1)
+        while cur_loc != target_point:
+            cur_loc = Location(cur_loc.latitude + x_step, cur_loc.longitude + y_step)
+            print('Update location of transport to {} {}'.format(cur_loc.latitude, cur_loc.longitude))
+            self.send_transp_loc(origin, cur_loc)
+            time.sleep(1)
+
+    def send_transp_loc(self, origin, loc):
+        msg_id = randint(1, 1e9)
+        d_id = randint(1, 1e9)
+        self.send_message(msg_id, d_id, origin, json.dumps({
+            'location': loc,
+            'type': 'location'
+        }))
 
     def on_accept(self, msg_id: int, dialogue_id: int, origin: str, target: int):
         """Once we received an Accept, send the requested data."""
@@ -112,8 +150,16 @@ class TransportAgent(OEFAgent):
         encoded_data = json.dumps(contract).encode("utf-8")
         print("[{0}]: Transport: Sending contract to {1}".format(self.public_key, origin))
         self.send_message(0, dialogue_id, origin, encoded_data)
+        self.request_agent_location(origin)
 
         self.search_drivers()
+
+    def request_agent_location(self, origin):
+        msg_id = randint(1, 1e9)
+        dialogue_id = randint(1, 1e9)
+        self.send_message(msg_id, dialogue_id, origin, json.dumps({
+            'request': 'location'
+        }))
 
     def on_start_trip(self):
         return

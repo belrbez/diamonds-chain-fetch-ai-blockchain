@@ -5,7 +5,7 @@ from typing import List
 
 from fetchai.ledger.crypto import Entity, Address
 from oef.agents import OEFAgent
-from oef.query import Query, Constraint, Eq, Distance
+from oef.query import Query, Constraint, Eq, Distance, GtEq, LtEq
 from oef.schema import Description, Location
 
 from agents.transport_schema import TRANSPORT_DATAMODEL
@@ -24,19 +24,18 @@ class TransportAgent(OEFAgent):
         self.data = {
             'price_per_km': data['price_per_km'],
             'state': "WAIT",
-            'location': data['location']
+            'location_latitude': data['location'].latitude,
+            'location_longitude': data['location'].longitude
         }
         self.transport_description = Description(self.data, TRANSPORT_DATAMODEL())
-        self.distance_allowed_area = 50000.0
+        self.distance_allowed_area = 10.0
 
     def search_drivers(self):
-        print("[{0}]: Transport: Searching for Passenger trips {1} with allowed distance {2}...".format(self.public_key,
-                                                                                                        self.data[
-                                                                                                            'location'].latitude,
-                                                                                                        self.distance_allowed_area))
+        print("[{0}]: Transport: Searching for Passenger trips {1} with allowed distance {2}..."
+              .format(self.public_key, self.data['location_latitude'], self.distance_allowed_area))
         query = Query(
-            [Constraint(TRIP_DATAMODEL.FROM_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area)),
-             Constraint(TRIP_DATAMODEL.TO_LOCATION.name, Distance(self.data['location'], self.distance_allowed_area))])
+            [Constraint(TRIP_DATAMODEL.FROM_LOCATION_LONGITUDE.name, GtEq(self.data['location_longitude'])),
+             Constraint(TRIP_DATAMODEL.TO_LOCATION_LONGITUDE.name, LtEq(self.data['location_longitude']))])
         self.search_services(0, query)
 
     def search_passengers(self):

@@ -1,6 +1,6 @@
 import setuptools
 
-requirements = ['flask', 'oef', 'schedule']
+requirements = ['flask', 'flask_cors', 'oef', 'schedule']
 
 setuptools.setup(
     name='Backend',

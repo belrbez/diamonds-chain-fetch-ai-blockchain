@@ -72,6 +72,7 @@ class TripAgent(OEFAgent):
             'to_location_latitude': self.data['to_location_latitude'],
             'to_location_longitude': self.data['to_location_longitude']
         }).encode('utf-8'))
+        self.unregister_agent(randint(1, 1e9))
         self.stop()
 
 

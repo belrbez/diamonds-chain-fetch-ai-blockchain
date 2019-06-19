@@ -1,6 +1,7 @@
 import json
 from email._header_value_parser import Address
 from fetchai.ledger.crypto import Entity, Address
+from fetchai.ledger.api import LedgerApi
 
 from random import randint
 from oef.agents import OEFAgent
@@ -33,6 +34,7 @@ class TripAgent(OEFAgent):
         self.data['state'] = 'free'
         self.data['position'] = Location(self.data['from_location_latitude'], self.data['from_location_longitude'])
         self.possible_trips = []
+        # self.contract = data['rent_contract']
 
     def on_cfp(self, msg_id: int, dialogue_id: int, origin: str, target: int, query: CFP_TYPES):
         """Send a simple Propose to the sender of the CFP."""
@@ -45,6 +47,13 @@ class TripAgent(OEFAgent):
         #     return
         # for i, p in enumerate(proposals):
         #     if p.values['location']:
+
+        # self.possible_trips.append(origin)
+        # api = LedgerApi('185.91.52.11', 10002)
+        # Need funds to deploy contract
+        # api.sync(api.tokens.wealth(Address(self), 59000000))
+        # q = self.contract.query(api, 'getAccountRides', acc_id=self.data['account_id'])
+
         # TODO: check if proposals['location'] is near trip
         if self.data['state'] == 'drive':
             print('Decline transport because already driving')
@@ -70,6 +79,12 @@ class TripAgent(OEFAgent):
         if msg['type'] == 'contract':
             print('Receivied contract from transport')
             return
+
+        # api = LedgerApi('185.91.52.11', 10002)
+        # Need funds to deploy contract
+        # api.sync(api.tokens.wealth(Address(self), 59000000))
+        # msg.action(api, 'endJourney', 2456766, [Address(origin), Address(self)], Address(origin), Address(self), self.data['account_id'],
+        #            self.data['can_be_driver'])
 
         if msg['type'] == 'request':
             print('Trip received request from transport')

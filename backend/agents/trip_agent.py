@@ -100,7 +100,8 @@ class TripAgent(OEFAgent):
         if msg['type'] == 'location':
             if msg['status'] == 'Trip started':
                 self.data['position'] = Location(msg['location_latitude'], msg['location_longitude'])
-                self.data['transp_location'] = {'latitude': msg['location_latitude'], 'longitude': msg['longitude']}
+                self.data['transp_location'] = {'latitude': msg['location_latitude'],
+                                                'longitude': msg['location_longitude']}
 
                 print('Agent change location', msg)
 

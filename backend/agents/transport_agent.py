@@ -49,7 +49,7 @@ class TransportAgent(OEFAgent):
         # cur_location.distance()
         print("[{0}]: Transport: Driving {1}...".format(self.public_key, cur_location))
 
-    def async_on_search_result(self, search_id: int, agents: List[str]):
+    def on_search_result(self, search_id: int, agents: List[str]):
         if self.data['state'] == 'DRIVE':
             return
 

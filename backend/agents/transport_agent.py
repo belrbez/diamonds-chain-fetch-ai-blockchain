@@ -58,7 +58,6 @@ class TransportAgent(OEFAgent):
     def on_dialogue_error(self, answer_id: int, dialogue_id: int, origin: str):
         pass
 
-
     def search_passengers(self):
         print("[{0}]: Transport: Searching for Passenger trips {1} with allowed distance {2}...".format(self.public_key,
                                                                                                         self.data[
@@ -214,9 +213,13 @@ class TransportAgent(OEFAgent):
 
 def search_cron(loop, agent):
     asyncio.set_event_loop(loop)
+
     while 1:
-        time.sleep(10)
-        agent.search_drivers()
+        try:
+            time.sleep(10)
+            agent.search_drivers()
+        except Exception:
+            print('exception while waiting search drivers')
 
 
 def add_transport_agent(data):

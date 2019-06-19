@@ -31,7 +31,7 @@ class TripAgent(OEFAgent):
         }
         self.trip_description = Description(self.data, TRIP_DATAMODEL())
         self.data['state'] = 'free'
-        self.data['cur_loc'] = Location(self.data['from_location_latitude'], self.data['from_location_longitude'])
+        self.data['position'] = Location(self.data['from_location_latitude'], self.data['from_location_longitude'])
         self.possible_trips = []
 
     def on_cfp(self, msg_id: int, dialogue_id: int, origin: str, target: int, query: CFP_TYPES):
@@ -85,7 +85,7 @@ class TripAgent(OEFAgent):
         if msg['type'] == 'location':
             # print('Trip Get location', msg)
             if msg['status'] == 'Trip started':
-                self.data['cur_loc'] = Location(msg['location_latitude'], msg['location_longitude'])
+                self.data['position'] = Location(msg['location_latitude'], msg['location_longitude'])
                 print('Account upd location to {} {}'.format(self.data['cur_loc'].latitude,
                                                              self.data['cur_loc'].longitude))
             return

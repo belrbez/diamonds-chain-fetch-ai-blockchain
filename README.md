@@ -2,18 +2,21 @@
 
 ## InstaDrive.io Project
 
-https://hackathon.dltstax.net/#/workspace/DiamondsChain
+See: https://devpost.com/software/instadrive-io
 
 \#WhiteNightHACK, blockchain and mobility
 
+blockchain
+smartcontract
+decentralized
 python
 FetchAI
 angular
 mesh
 bigchaindb
 hashstax
-smartcontract
-blockchain
+
+
 
 ## How to build & run backend
 
